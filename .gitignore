@@ -30,7 +30,8 @@ source/assets/css
 github.io
 out
 
-repos
+.cache
+public
 lerna-debug.log
 package-lock.json
 yarn.lock
