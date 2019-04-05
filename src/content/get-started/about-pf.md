@@ -1,4 +1,5 @@
 ---
+linkText: "About"
 path: "/get-started/about"
 ---
 # About PatternFly 4

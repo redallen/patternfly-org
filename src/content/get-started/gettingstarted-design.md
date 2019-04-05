@@ -1,4 +1,5 @@
 ---
+path: "Designers"
 path: "/get-started/designers"
 ---
 # Design with PatternFly

@@ -1,8 +1,6 @@
-/**
- * Implement Gatsby's Browser APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/browser-apis/
- */
+// Import global CSS files here. Have no remorse.
+// https://www.gatsbyjs.org/docs/creating-global-styles
+import '@patternfly/patternfly/patternfly.css';
 // require('./_repos/core/src/patternfly/patternfly.scss');
 // require('./_repos/core/src/patternfly/patternfly-addons.scss');
 // require('prismjs/themes/prism-coy.css');

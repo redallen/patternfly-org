@@ -10,10 +10,11 @@
     "build:react": "cd deps/patternfly-react && yarn build:pf4",
     "build:next": "cd deps/patternfly-next && yarn build",
     "clean": "rimraf .cache public",
-    "develop": "gatsby develop",
+    "develop": "yarn clean && gatsby develop",
     "uninstall": "find . -name node_modules | xargs rm -rf"
   },
   "dependencies": {
+    "@patternfly/patternfly": "^1.0.250",
     "gatsby": "^2.3.10",
     "gatsby-mdx": "^0.4.4",
     "gatsby-plugin-catch-links": "^2.0.13",
