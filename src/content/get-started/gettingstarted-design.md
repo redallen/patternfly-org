@@ -1,5 +1,5 @@
 ---
-path: "Designers"
+linkText: "Design"
 path: "/get-started/designers"
 ---
 # Design with PatternFly

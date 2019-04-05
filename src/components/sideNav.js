@@ -31,10 +31,8 @@ const SiteNav = () => {
   );
 
   const hasActiveLink = (navGroup, location) => {
-    console.log('has active link?', navGroup, location.pathname);
     for (const item of navGroup) {
       if (isActive(item.path, location.pathname)) {
-        console.log('has active link true');
         return true;
       }
     }

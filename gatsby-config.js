@@ -37,45 +37,24 @@ module.exports = {
         path: `${__dirname}/src/content`
       }
     },
-    'gatsby-plugin-no-sourcemaps',
-    'gatsby-plugin-react-helmet',
-    'gatsby-plugin-sharp',
-    'gatsby-plugin-sitemap',
+    {
+      resolve: `gatsby-mdx`,
+      options: {
+        extensions: ['.md', '.mdx'],
+        // gatsbyRemarkPlugins: [
+        //   {
+        //     resolve: `gatsby-remark-images`,
+        //     options: {
+        //       maxWidth: 700
+        //     }
+        //   }
+        // ]
+      }
+    },
     'gatsby-plugin-catch-links', // catch links in markdown files and use gatsby-link to navigate
+    'gatsby-plugin-react-helmet',
+    'gatsby-plugin-sitemap',
     'gatsby-plugin-offline', // this plugin enables Progressive Web App + Offline functionality https://gatsby.app/offline
-    {
-      resolve: 'gatsby-plugin-robots-txt',
-      options: {
-        host: 'https://v2.patternfly.org',
-        sitemap: 'https://v2.patternfly.org/sitemap.xml',
-        policy: [{ userAgent: '*', allow: '/' }]
-      }
-    },
-    // {
-    //   resolve: `gatsby-mdx`,
-    //   options: {
-    //     extensions: ['.mdx'],
-    //     defaultLayouts: {
-    //       default: require.resolve("./src/templates/mdxPageTemplate.js")
-    //     },
-    //     gatsbyRemarkPlugins: [
-    //       {
-    //         resolve: `gatsby-remark-images`,
-    //         options: {
-    //           maxWidth: 700
-    //         }
-    //       }
-    //     ]
-    //   }
-    // },
-    {
-      resolve: `gatsby-plugin-sass`,
-      options: {
-        importer: require('node-sass-glob-importer'),
-        postCssPlugins: [],
-        precision: 5
-      }
-    },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -87,20 +66,23 @@ module.exports = {
         display: 'minimal-ui'
       },
     },
-    'gatsby-transformer-sharp',
     {
-      resolve: `gatsby-transformer-remark`,
+      resolve: 'gatsby-plugin-robots-txt',
       options: {
-        plugins: [
-          'gatsby-remark-autolink-headers',
-          {
-            resolve: `gatsby-remark-images`,
-            options: {
-              maxWidth: 700,
-            }
-          }
-        ]
+        host: 'https://v2.patternfly.org',
+        sitemap: 'https://v2.patternfly.org/sitemap.xml',
+        policy: [{ userAgent: '*', allow: '/' }]
       }
     },
+    {
+      resolve: `gatsby-plugin-sass`,
+      options: {
+        importer: require('node-sass-glob-importer'),
+        postCssPlugins: [],
+        precision: 5
+      }
+    },
+    // 'gatsby-plugin-sharp',
+    // 'gatsby-transformer-sharp',
   ],
 }

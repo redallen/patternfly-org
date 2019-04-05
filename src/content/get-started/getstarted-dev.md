@@ -1,5 +1,5 @@
 ---
-linkText: "Developers"
+linkText: "Develop"
 path: "/get-started/developers"
 ---
 # Develop with PatternFly

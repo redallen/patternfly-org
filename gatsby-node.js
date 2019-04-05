@@ -1,12 +1,11 @@
 const path = require("path");
 
 exports.createPages = ({graphql, actions}) => {
-  const templatePath = path.resolve('./src/templates/markdownPageTemplate.js');
+  const templatePath = path.resolve('./src/templates/mdxTemplate.js');
   const sitemapData = graphql(`
     {
-      allMarkdownRemark {
+      allMdx {
         nodes {
-          fileAbsolutePath
           frontmatter {
             linkText
             path
@@ -17,7 +16,7 @@ exports.createPages = ({graphql, actions}) => {
 
   return sitemapData.then(({data}) => {
     // console.log('sitemap', data);
-    data.allMarkdownRemark.nodes
+    data.allMdx.nodes
       .map(node => node.frontmatter)
       .filter(frontmatter => frontmatter.path)
       .forEach(frontmatter => {
@@ -26,10 +25,21 @@ exports.createPages = ({graphql, actions}) => {
           path: frontmatter.path,
           component: templatePath,
           context: {
-            title: frontmatter.linkText,
-            path: frontmatter.path
+            title: frontmatter.linkText
           }
         });
       });
+  });
+};
+
+exports.onCreateWebpackConfig = ({ stage, loaders, actions, plugins, getConfig }) => {
+  actions.setWebpackConfig({
+    resolve: {
+      alias: {
+        '@src': path.resolve(__dirname, './src'),
+        '@deps': path.resolve(__dirname, './deps'),
+        '@static': path.resolve(__dirname, './static'),
+      }
+    },
   });
 }

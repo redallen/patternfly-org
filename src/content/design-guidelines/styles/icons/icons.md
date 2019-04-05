@@ -1,10 +1,13 @@
-import { Button, Grid, GridItem } from '@patternfly/react-core';
-import { CheckCircleIcon, TimesCircleIcon } from '@patternfly/react-icons';
-import Icons from '@content/icons';
+---
+linkText: "Icons"
+path: "/design-guidelines/styles/icons"
+---
 
 # Icons
 
 ### All icons
 PatternFly icons are two dimensional and flat. Most of the icons are gray with the exception of icons that require color or emphasis. If you're a developer, [check out our getting started page](/get-started/developers#using-styles) to learn more about how to get and use our icon set.
+
+import Icons from './icons';
 
 <Icons />

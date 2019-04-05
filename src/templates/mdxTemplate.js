@@ -7,7 +7,7 @@ import {
   TextContent
 } from '@patternfly/react-core';
 import { PatternFlyThemeProvider } from '@patternfly/react-styled-system';
-
+import MDXRenderer from "gatsby-mdx/mdx-renderer";
 
 const MarkdownPageTemplate = ({ data }) => {
   return (
@@ -15,10 +15,7 @@ const MarkdownPageTemplate = ({ data }) => {
       <PageSection variant={PageSectionVariants.light}>
         <PatternFlyThemeProvider>
           <TextContent>
-            <div
-              className="markdown-body"
-              dangerouslySetInnerHTML={{ __html: data.markdownRemark.html }}
-              />}
+            <MDXRenderer>{data.mdx.code.body}</MDXRenderer>
           </TextContent>
         </PatternFlyThemeProvider>
       </PageSection>
@@ -28,8 +25,10 @@ const MarkdownPageTemplate = ({ data }) => {
 
 export const pageQuery = graphql`
 query GetComponent($path: String!) {
-  markdownRemark(frontmatter: { path: { eq: $path } }) {
-    html
+  mdx(frontmatter: { path: { eq: $path } }) {
+    code {
+      body
+    }
   }
 }
 `;

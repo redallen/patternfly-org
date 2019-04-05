@@ -9,8 +9,8 @@ import {
   Text, TextVariants,
   Title
 } from '@patternfly/react-core';
-import patternflyLogo from '../../../static/images/l_pf-reverse-164x11.png';
-import redhatLogo from '../../../static/images/RHLogo.svg';
+import patternflyLogo from '@static/images/l_pf-reverse-164x11.png';
+import redhatLogo from '@static/images/RHLogo.svg';
 
 class Footer extends React.Component {
   render() {

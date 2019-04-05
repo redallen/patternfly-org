@@ -6,7 +6,7 @@ path: "/design-guidelines/usage-and-behavior/modal"
 Modals load and display important information without navigating away from the current page.
 
 ## Primary elements
-![Modal](img/modal.png)
+![Modal](./img/modal.png)
 
 1. **Backdrop**
 2. **Modal box**
