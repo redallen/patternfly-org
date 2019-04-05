@@ -37,7 +37,7 @@ const PageNav = () => {
           <NavList variant={NavVariants.horizontal}>
             {Object.entries(grouped).map(([key, sitePages]) => {
               const firstPage = sitePages
-                .sort((a, b) => a.context.title.localeCompare(b.context.title))[0];
+                .sort((a, b) => a.path.localeCompare(b.path))[0];
               return (
                 <NavItem key={key} isActive={location.pathname.indexOf(key) !== -1}>
                   <Link to={firstPage.path}>{key.split('-').join(' ')}</Link>
