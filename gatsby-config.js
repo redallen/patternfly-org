@@ -1,24 +1,24 @@
 // Files we never care to pull data from
+// matched by https://github.com/paulmillr/chokidar
 const ignore = [
-  `**/dist/**`,
+  `**/dist`,
+  `**/helpers`,
+  `**/scripts`,
+  `**/styles`,
+  `**/build`,
+  `**/utils`,
+  `**/test-helpers`,
+  /.*react-styles.*/,
+  /.*react-docs.*/,
+  /.*react-integration.*/,
+  `**/\..*`, // dotfiles
   `**/*.d.ts`,
   `**/*.test.*`,
   `**/index.*`,
-  `**/helpers/**`,
-  `**/scripts/**`,
-  `**/styles/**`,
-  `**/build/**`,
-  `**/utils/**`,
-  `**/test-helpers/**`,
-  `**/\.*`,
-  `**/\..*/**`,
   `**/tsconfig.*`,
   `**/tslint.*`,
   `**/README.*`,
   `**/CHANGELOG.*`,
-  `**/react\-docs/**`,
-  `**/react\-styles/**`,
-  `**/react\-integration/**`,
 ];
 
 module.exports = {
@@ -37,6 +37,14 @@ module.exports = {
         path: `${__dirname}/src/content`
       }
     },
+    // {
+    //   resolve: `gatsby-source-filesystem`,
+    //   options: {
+    //     name: `handlebars`,
+    //     path: `${__dirname}/deps/patternfly-next/src/patternfly`,
+    //     ignore: ignore
+    //   }
+    // },
     {
       resolve: `gatsby-mdx`,
       options: {
@@ -51,7 +59,7 @@ module.exports = {
         // ]
       }
     },
-    'gatsby-plugin-catch-links', // catch links in markdown files and use gatsby-link to navigate
+    // 'gatsby-plugin-catch-links', // catch links in markdown files and use gatsby-link to navigate
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-sitemap',
     'gatsby-plugin-offline', // this plugin enables Progressive Web App + Offline functionality https://gatsby.app/offline
@@ -72,14 +80,6 @@ module.exports = {
         host: 'https://v2.patternfly.org',
         sitemap: 'https://v2.patternfly.org/sitemap.xml',
         policy: [{ userAgent: '*', allow: '/' }]
-      }
-    },
-    {
-      resolve: `gatsby-plugin-sass`,
-      options: {
-        importer: require('node-sass-glob-importer'),
-        postCssPlugins: [],
-        precision: 5
       }
     },
     // 'gatsby-plugin-sharp',

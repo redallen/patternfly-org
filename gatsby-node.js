@@ -5,10 +5,13 @@ exports.createPages = ({graphql, actions}) => {
   const sitemapData = graphql(`
     {
       allMdx {
-        nodes {
-          frontmatter {
-            linkText
-            path
+        edges {
+          node {
+            fileAbsolutePath
+            frontmatter {
+              linkText
+              path
+            }
           }
         }
       }
@@ -16,7 +19,8 @@ exports.createPages = ({graphql, actions}) => {
 
   return sitemapData.then(({data}) => {
     // console.log('sitemap', data);
-    data.allMdx.nodes
+    data.allMdx.edges
+      .map(edge => edge.node)
       .map(node => node.frontmatter)
       .filter(frontmatter => frontmatter.path)
       .forEach(frontmatter => {

@@ -22,7 +22,6 @@ import SideNav from './sideNav';
 
 class Layout extends React.Component {
   componentDidMount() {
-    // eslint-disable-next-line no-undef
     if (window.docsearch) {
       window.docsearch({
         apiKey: '06941733239da4f8617d272cf2ed4d5c',
@@ -60,7 +59,6 @@ class Layout extends React.Component {
     const SiteHeader = (
       <PageHeader
         className="pf4-site-header"
-        showNavToggle={sideNav !== null}
         logoProps={{onClick: this.onLogoClick}}
         logo={<Brand src={brandImg} alt="PatternFly Logo"/>}
         topNav={<PageNav />}

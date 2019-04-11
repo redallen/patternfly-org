@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "build": "gatsby build",
+    "gatsby": "gatsby",
     "build:deps": "yarn build:react && yarn build:next",
     "build:react": "cd deps/patternfly-react && yarn build:pf4",
     "build:next": "cd deps/patternfly-next && yarn build",
@@ -14,12 +15,12 @@
     "uninstall": "find . -name node_modules | xargs rm -rf"
   },
   "dependencies": {
-    "@mdx-js/mdx": "^0.20.3",
-    "@mdx-js/tag": "^0.20.3",
+    "@mdx-js/mdx": "0.20.3",
+    "@mdx-js/tag": "0.20.3",
     "@patternfly/patternfly": "^1.0.250",
     "file-saver": "^2.0.1",
-    "gatsby": "^2.3.14",
-    "gatsby-mdx": "^0.4.4",
+    "gatsby": "2.3.17",
+    "gatsby-mdx": "0.4.5",
     "gatsby-plugin-catch-links": "^2.0.13",
     "gatsby-plugin-manifest": "^2.0.26",
     "gatsby-plugin-no-sourcemaps": "^2.0.2",
@@ -35,14 +36,12 @@
     "gatsby-source-filesystem": "^2.0.28",
     "gatsby-transformer-json": "^2.1.11",
     "gatsby-transformer-sharp": "^2.1.17",
-    "node-sass-glob-importer": "^5.3.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "~16.8.6",
+    "react-dom": "~16.8.6",
     "react-helmet": "^5.2.0",
     "react-pose": "^4.0.8"
   },
   "devDependencies": {
-    "eslint-config-react-app": "^3.0.8",
     "rimraf": "^2.6.3"
   },
   "keywords": [
