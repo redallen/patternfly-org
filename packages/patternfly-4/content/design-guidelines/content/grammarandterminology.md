@@ -1,6 +1,9 @@
 ---
 path: "/design-guidelines/content/grammar-and-terminology"
 ---
+
+import './grammar.scss';
+
 # Style guide
 
 [Common terminology](#common-terminology)
