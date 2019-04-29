@@ -2,7 +2,12 @@
 path: "/design-guidelines/content/grammar-and-terminology"
 ---
 
+import { Title } from '@patternfly/react-core';
 import './grammar.scss';
+
+<Title headingLevel="h1" size="4xl">
+  4xl Title
+</Title>
 
 # Style guide
 
