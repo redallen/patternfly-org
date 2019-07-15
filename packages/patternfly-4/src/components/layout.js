@@ -30,7 +30,11 @@ import axios from 'axios';
 import './layout.scss';
 
 // Set initial state
-let state = { isBannerOpen: true, isExpanded: false, sections: {} };
+let state = { 
+  isBannerOpen: true, 
+  isExpanded: false, 
+  sections: {} 
+};
 
 class Layout extends React.Component {
 
@@ -38,7 +42,7 @@ class Layout extends React.Component {
     super(props);
 
     // Retrieve the last state
-    this.state = state;
+    this.state = Object.assign(state, { isBannerOpen: sessionStorage.getItem('pf4-banner-closed') !== 'true' });
   }
 
   componentDidMount() {
@@ -67,6 +71,7 @@ class Layout extends React.Component {
   }
 
   closeBanner = () => {
+    sessionStorage.setItem('pf4-banner-closed', 'true');
     this.setState({
       isBannerOpen: false
     })
