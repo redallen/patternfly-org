@@ -1,6 +1,17 @@
-aws configure set aws_access_key_id ${AWS_ACCESS_KEY}
-aws configure set aws_secret_access_key ${AWS_SECRET_KEY}
-aws configure set region ${AWS_REGION}
+aws s3 rm --recursive s3://patternfly-org-staging
+# TODO: Proper S3 meta tags for redirects
+# https://www.gatsbyjs.org/docs/caching/
+aws s3 sync build/patternfly-org s3://patternfly-org-staging --exclude "*" \
+    --include "*.html" \
+    --include "page-data/**/**.json" \
+    --include "sw.js" \
+    --cache-control "public, max-age=0, must-revalidate"
+
+aws s3 sync build/patternfly-org s3://patternfly-org-staging --include "*" \
+    --exclude "*.html" \
+    --exclude "page-data/**/**.json" \
+    --exclude "sw.js" \
+    --cache-control "public, max-age=31536000, immutable"
 
 # TODO: Proper S3 meta tags for redirects and caching
 aws s3 rm --recursive s3://patternfly-org-staging
