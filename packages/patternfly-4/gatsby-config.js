@@ -31,7 +31,6 @@ module.exports = {
             { section: 'charts' },
             { section: 'components' },
             { section: 'demos' },
-            { section: 'beta' },
             { section: 'layouts' },
           ],
           get_started: [
