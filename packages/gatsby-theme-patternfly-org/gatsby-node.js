@@ -281,10 +281,15 @@ exports.createPages = ({ actions, graphql }, pluginOptions) => graphql(`
 exports.createSchemaCustomization = ({ actions }) => {
   // Define types for sideNav if any of core, react, or org aren't included
   const sideNavTypeDefs = `
+    type SideNavSubItem @infer {
+      title: String
+      index: Int
+    }
     type SideNavItem @infer {
       section: String
       text: String
       path: String
+      subItems: [SideNavSubItem]
     }
     type SideNav @infer {
       core: [SideNavItem]

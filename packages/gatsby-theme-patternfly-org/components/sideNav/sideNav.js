@@ -50,6 +50,7 @@ export const SideNav = ({
   }, {});
 
   const sideNavItems = sideNavContexts[context.replace(/-/g, '_')] || [];
+  console.log('sideNavItems', sideNavItems)
 
   // TODO: Get a better design and get rid of this thing.
   const contextSwitcher = pageSource === 'org'
@@ -58,7 +59,6 @@ export const SideNav = ({
   const dropdownToggle = (
     <DropdownToggle
       onToggle={() => setDropdownOpen(!isDropdownOpen)}
-      iconComponent={CaretDownIcon}
       >
       {contextSwitcher[context]}
     </DropdownToggle>
@@ -111,6 +111,11 @@ export const SideNav = ({
               >
                 {allNavItems[section]
                   .filter(node => node.source === context || node.source === 'shared')
+                  .map(node => {
+                    const { subItems } = sideNavItems.find(node => node.section === section);
+                    console.log('todo: sort', node, 'based off', subItems);
+                    return node;
+                  })
                   .map(renderNavItem)}
               </NavExpandable>
             );

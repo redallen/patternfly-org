@@ -39,7 +39,16 @@ module.exports = {
         showFooter: true, // Footer
         sideNav: {
           core: [
-            { section: 'overview' },
+            {
+              section: 'overview',
+              subItems: [
+                {
+                  // Title: index, default index is 100
+                  title: 'Release notes',
+                  index: 0
+                }
+              ]
+            },
             { section: 'components' },
             { section: 'layouts' },
             { section: 'utilities' },

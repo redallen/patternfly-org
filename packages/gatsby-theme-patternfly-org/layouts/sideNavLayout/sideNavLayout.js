@@ -53,8 +53,7 @@ export const SideNavLayout = ({
       num
       url
     }
-    allSitePage(filter: { context: { navSection: { ne: null } } },
-                sort: { fields: context___title }) {
+    allSitePage(filter: { context: { navSection: { ne: null } } }) {
       nodes {
         path
         context {
@@ -77,26 +76,46 @@ export const SideNavLayout = ({
             section
             text
             path
+            subItems {
+              title
+              index
+            }
           }
           react {
             section
             text
             path
+            subItems {
+              title
+              index
+            }
           }
           get_started {
             section
             text
             path
+            subItems {
+              title
+              index
+            }
           }
           design_guidelines {
             section
             text
             path
+            subItems {
+              title
+              index
+            }
           }
           contribute {
             section
             text
             path
+            subItems {
+              title
+              index
+            }
           }
         }
       }
