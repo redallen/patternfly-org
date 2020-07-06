@@ -5,7 +5,6 @@
  * See: https://www.gatsbyjs.org/docs/static-query/
  */
 import React, { useEffect, useState } from 'react';
-import { graphql, useStaticQuery } from 'gatsby';
 import { Helmet } from 'react-helmet';
 
 import {
@@ -23,7 +22,7 @@ import {
   DropdownGroup,
   Divider
 } from '@patternfly/react-core';
-import { SearchIcon, CaretDownIcon, ExternalLinkAltIcon } from '@patternfly/react-icons';
+import { SearchIcon, ExternalLinkAltIcon } from '@patternfly/react-icons';
 import { SideNav, TopNav,  Footer, GdprBanner } from '../../components';
 import staticVersions from 'gatsby-theme-patternfly-org/versions.json';
 import logo from '../logo.svg';
@@ -37,75 +36,14 @@ export const SideNavLayout = ({
   hideSideNav = false,
   showGdprBanner = false,
   showFooter = false,
-  pageTitle = ''
+  pageTitle = '',
+  topNavItems = []
 }) => {
   // Put queries for Top and Side navs here for performance
   // We should consider passing down the `sitePlugin` data in pageContext
   // rather than fetching the GraphQL here
-  const data = useStaticQuery(graphql`
-  {
-    site {
-      siteMetadata {
-        title
-      }
-    }
-    prInfo: envVars(name: { eq: "PR_INFO" }) {
-      num
-      url
-    }
-    allSitePage(filter: { context: { navSection: { ne: null } } },
-                sort: { fields: context___title }) {
-      nodes {
-        path
-        context {
-          title
-          navSection
-          source
-        }
-      }
-    }
-    sitePlugin(name: { eq: "gatsby-theme-patternfly-org" }) {
-      pluginOptions {
-        context
-        topNavItems {
-          text
-          path
-          contexts
-        }
-        sideNav {
-          core {
-            section
-            text
-            path
-          }
-          react {
-            section
-            text
-            path
-          }
-          get_started {
-            section
-            text
-            path
-          }
-          design_guidelines {
-            section
-            text
-            path
-          }
-          contribute {
-            section
-            text
-            path
-          }
-        }
-      }
-    }
-  }
-  `);
-  const { title } = data.site.siteMetadata;
-  const { num, url } = data.prInfo;
-  const { topNavItems, sideNav, context: pageSource } = data.sitePlugin.pluginOptions;
+  const data = {};
+  const { num, url } = { num: '0', url: 'github.com' };
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [versions, setVersions] = useState({...staticVersions});
   const initialVersion = staticVersions.Releases.find(release => release.latest);
@@ -122,9 +60,9 @@ export const SideNavLayout = ({
         debug: false // Set debug to true if you want to inspect the dropdown
       });
     }
-    if (window.fetch && pageSource === 'org') {
+    if (window.fetch && context === 'org') {
       fetch('/versions.json')
-        .then(data => data.json())
+        .then(d => d.json())
         .then(json => setVersions(json))
         .catch(); // No big deal for core/react
     }
@@ -138,7 +76,7 @@ export const SideNavLayout = ({
         nav={<SideNav
           location={location}
           context={context}
-          pageSource={pageSource}
+          pageSource={context}
           allPages={data.allSitePage.nodes}
           sideNavContexts={sideNav}
           parityComponent={parityComponent} />}
@@ -188,7 +126,7 @@ export const SideNavLayout = ({
     </DropdownItem>
   ];
 
-  const PageTools = pageSource === 'org'
+  const PageTools = context === 'org'
     ? (
       <PageHeaderTools>
         <PageHeaderToolsItem>
@@ -236,8 +174,8 @@ export const SideNavLayout = ({
     )
     : undefined;
 
-  let headerTitle = title;
-  if (pageSource === 'org') {
+  let headerTitle = '123';
+  if (context === 'org') {
     headerTitle = <Brand src={logo} alt="Patternfly Logo" />;
   } else if (num) {
     headerTitle = `PR #${num}`;
@@ -264,7 +202,7 @@ export const SideNavLayout = ({
   return (
     <div className="ws-side-nav-layout">
       <Helmet>
-        <title>{title}{pageTitle && ` - ${pageTitle}`}</title>
+        <title>{pageTitle}</title>
       </Helmet>
       <div id="ws-page-banners">
         {showGdprBanner && <GdprBanner />}

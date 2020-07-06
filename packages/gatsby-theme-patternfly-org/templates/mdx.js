@@ -1,7 +1,4 @@
 import React from 'react';
-import { graphql, Link } from 'gatsby';
-import { MDXProvider } from '@mdx-js/react';
-import { MDXRenderer } from 'gatsby-plugin-mdx';
 import {
   Alert,
   Badge,
@@ -127,11 +124,6 @@ const MDXTemplate = ({ data, location, pageContext }) => {
             </Alert>
           )}
           {/* Design docs should not apply to demos and overview */}
-          {data.designDoc && !['overview', 'demos'].includes(navSection) && (
-            <MDXRenderer>
-              {data.designDoc.body}
-            </MDXRenderer>
-          )}
           {releaseNoteTOC && (
             <Grid hasGutter className="ws-release-notes-toc">
               {versions.Releases
@@ -216,22 +208,9 @@ const MDXTemplate = ({ data, location, pageContext }) => {
   );
 
   const MDXContent = () => (
-    <MDXProvider components={{
-      ...commonComponents,
-      code: props =>
-        <Example
-          location={location}
-          source={source}
-          html={props.title && htmlExamples && htmlExamples[getId(props.title)].code}
-          hideDarkMode={hideDarkMode}
-          navSection={navSection}
-          componentName={componentName}
-          {...props} />
-    }}>
-      <MDXRenderer>
-        {data.doc.body}
-      </MDXRenderer>
-    </MDXProvider>
+    <div>
+      mdx content
+    </div>
   );
 
   const FeedbackSection = () => {
@@ -278,66 +257,3 @@ const MDXTemplate = ({ data, location, pageContext }) => {
 }
 
 export default MDXTemplate;
-
-export const pageQuery = graphql`
-  query MdxDocsPage($id: String!, $designId: String!, $propComponents: [String]!) {
-    doc: mdx(id: { eq: $id }) {
-      body
-      frontmatter {
-        cssPrefix
-        hideTOC
-        optIn
-        beta
-        katacodaBroken
-        hideDarkMode
-        showTitle
-        releaseNoteTOC
-        hideSource
-      }
-      fields {
-        navSection
-        componentName
-      }
-    }
-    designDoc: mdx(id: { eq: $designId }) {
-      body
-      frontmatter {
-        reactComponentName
-        coreComponentName
-      }
-    }
-    partials: allFile(filter: { fields: { name: { ne: null } } }) {
-      nodes {
-        fields {
-          name
-          partial
-        }
-      }
-    }
-    props: allComponentMetadata(filter: { name: { in: $propComponents, ne: null } }) {
-      nodes {
-        name
-        props {
-          beta
-          katacodaBroken
-          name
-          required
-          description
-          type {
-            name
-          }
-          tsType {
-            name
-            raw
-          }
-          defaultValue {
-            value
-          }
-          deprecated
-          hide
-          annotatedType
-        }
-      }
-    }
-  }
-`;

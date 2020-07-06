@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'gatsby';
+import { Link } from '@reach/router';
 import { PageSection, Title } from '@patternfly/react-core';
 import { SideNavLayout } from '../layouts/sideNavLayout/sideNavLayout';
 

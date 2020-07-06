@@ -16,9 +16,7 @@ module.exports = {
         // Opens the web app to look and feel like a standalone native app
         display: 'standalone',
         // icon used for splash screen, on home screen
-        icon: require.resolve('gatsby-theme-patternfly-org/images/patternfly-logo.svg'),
-        // GDPR banner
-        showGdprBanner: true,
+        icon: require.resolve('gatsby-theme-patternfly-org/images/patternfly-logo.svg')
       },
     },
   ]

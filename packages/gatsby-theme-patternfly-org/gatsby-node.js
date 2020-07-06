@@ -136,8 +136,6 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   }
 };
 
-const fullscreenPages = {};
-
 exports.createPages = ({ actions, graphql }, pluginOptions) => graphql(`
   {
     docs: allMdx(filter: { fields: { source: { ne: "design-snippets" } } }) {
@@ -197,6 +195,7 @@ exports.createPages = ({ actions, graphql }, pluginOptions) => graphql(`
       component: path.resolve(__dirname, './pages/404.js')
     });
     // Create our per-MDX file pages
+    const fullscreenPages = {};
     result.data.docs.nodes
       .concat(result.data.pages.nodes)
       .filter(node => !hiddenTitles.includes(node.fields.title.toLowerCase()))
@@ -278,13 +277,12 @@ exports.createPages = ({ actions, graphql }, pluginOptions) => graphql(`
               }
             });
           });
-          
-          fs.writeFileSync(
-            '.cache/fullscreenPages.json',
-            JSON.stringify(Object.keys(fullscreenPages).sort(), null, 2),
-          );
         }
       });
+    fs.writeFileSync(
+      '.cache/fullscreenPages.json',
+      JSON.stringify(Object.keys(fullscreenPages).sort(), null, 2),
+    );
   });
 
 // https://www.gatsbyjs.org/docs/schema-customization/

@@ -5,38 +5,20 @@
  * See: https://www.gatsbyjs.org/docs/static-query/
  */
 import React from 'react';
-import { graphql, useStaticQuery } from 'gatsby';
 import { Helmet } from 'react-helmet';
 
 import { Page, PageHeader, Brand, Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
 import logo from '../logo.svg';
 
 export const TrainingLayout = ({ trainingType, katacodaId, location }) => {
-  const data = useStaticQuery(graphql`
-  {
-    site {
-      siteMetadata {
-        title
-      }
-    }
-    prInfo: envVars(name: { eq: "PR_INFO" }) {
-      num
-      url
-    }
-    sitePlugin(name: { eq: "gatsby-theme-patternfly-org" }) {
-      pluginOptions {
-        context
-      }
-    }
-  }
-  `);
-  const { title } = data.site.siteMetadata;
-  const { num, url } = data.prInfo;
-  const { context: pageSource } = data.sitePlugin.pluginOptions;
+  const data = {};
+  const title = '1234';
+  const { num, url } = { num: 0, url: 'github.com' };
+  const context = 'org';
   const fileName = trainingType + '/' + katacodaId;
 
   let headerTitle = title;
-  if (pageSource === 'org') {
+  if (context === 'org') {
     headerTitle = <Brand src={logo} alt="Patternfly Logo" />;
   } else if (num) {
     headerTitle = `PR #${num}`;

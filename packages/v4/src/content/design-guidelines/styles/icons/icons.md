@@ -3,7 +3,7 @@ title: Icons
 section: styles
 hideSource: true
 ---
-import { Link } from 'gatsby';
+import { Link } from '@reach/router';
 import { Card, CardBody, Divider, Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';
 import CaretDownIcon from '@patternfly/react-icons/dist/js/icons/caret-down-icon';
 import CheckCircleIcon from '@patternfly/react-icons/dist/js/icons/check-circle-icon';

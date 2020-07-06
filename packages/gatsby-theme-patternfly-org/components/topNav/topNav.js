@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'gatsby';
+import { Link } from '@reach/router';
 import { Nav, NavList, NavItem } from '@patternfly/react-core';
 import './topNav.css';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'gatsby';
+import { Link } from '@reach/router';
 import { Nav, NavList, NavExpandable, DropdownToggle, DropdownItem, Dropdown } from '@patternfly/react-core';
 import { CaretDownIcon } from '@patternfly/react-icons';
 import { slugger, capitalize } from '../../helpers';

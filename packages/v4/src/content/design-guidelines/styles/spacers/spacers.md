@@ -4,7 +4,7 @@ section: styles
 hideTOC: true
 showTitle: true
 ---
-import { Link } from 'gatsby';
+import { Link } from '@reach/router';
 import './spacers.css';
 
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'gatsby';
+import { Link } from '@reach/router';
 import { SideNavLayout } from 'gatsby-theme-patternfly-org/layouts';
 import {
   Flex,
@@ -25,10 +25,36 @@ import './homepage.css';
 
 const aboutPatternFly = `Hello, we're PatternFly.`;
 const patternFlyPrinciples = 'Flyer fundamentals';
+const topNavItems = [
+  {
+    text: 'Get started',
+    path: '/get-started/about',
+    contexts: ['get-started']
+  },
+  {
+    text: 'Design guidelines',
+    path: '/design-guidelines/styles/colors',
+    contexts: ['design-guidelines']
+  },
+  {
+    text: 'Documentation',
+    path: '/documentation/react/overview/release-notes',
+    contexts: ['react', 'core']
+  },
+  {
+    text: 'Contribute',
+    path: '/contribute/about',
+    contexts: ['contribute']
+  },
+  {
+    text: 'Get in touch',
+    path: '/get-in-touch'
+  }
+];
 
 const IndexPage = ({ location }) => {
   return (
-  <SideNavLayout location={location} hideSideNav showGdprBanner={true} showBanner={true}>
+  <SideNavLayout location={location} hideSideNav showGdprBanner={true} showBanner={true} context="org" topNavItems={topNavItems}>
     <PageSection
       variant={PageSectionVariants.light}
       className="pf4-c-background-image ws-homepage-main-section"
@@ -38,10 +64,10 @@ const IndexPage = ({ location }) => {
           <TextContent>
             <img src={orb} alt="PatternFly logo" className="fadeInDown animated fadeInOne" />
             <Title headingLevel="h1" size="4xl" className="pf-m-white pf4-site-c-hero fadeIn animated fadeInTwo">
-              Build scalable experiences in the&nbsp;open.
+              Build scalable experiences in the open.
             </Title>
             <Title size="xl" headingLevel="h2" className="pf-m-white pf-u-mb-md pf-u-mb-3xl-on-md fadeInUp animated fadeInThree">
-              PatternFly is an open source design system built to drive consistency and&nbsp;unify&nbsp;teams.
+              PatternFly is an open source design system built to drive consistency and unify teams.
             </Title>
             <div className="pf-u-display-flex pf-u-justify-content-center pf-u-flex-direction-column pf-u-flex-direction-row-on-md">
               <Link
