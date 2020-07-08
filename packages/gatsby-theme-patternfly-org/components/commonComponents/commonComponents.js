@@ -8,10 +8,10 @@ import './commonComponents.css';
 export const commonComponents = {
   inlineCode: Example,
   pre: React.Fragment,
+  a: NoPrefixLink,
   p: (props) => <p className="ws-p" {...props} />,
   ul: (props) => <ul className="ws-ul" {...props} />,
   ul: (props) => <ul className="ws-ul" {...props} />,
-  a: NoPrefixLink,
   // Matching up with commonComponents.css pf-c-content
   ul: (props) => <ul className="ws-ul" {...props} />,
   ol: (props) => <ol className="ws-ol" {...props} />,
