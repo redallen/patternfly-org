@@ -5,7 +5,6 @@
  * See: https://www.gatsbyjs.org/docs/static-query/
  */
 import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
 
 import {
   Page,
@@ -77,8 +76,7 @@ export const SideNavLayout = ({
           location={location}
           context={context}
           pageSource={context}
-          allPages={data.allSitePage.nodes}
-          sideNavContexts={sideNav}
+          allPages={[]}
           parityComponent={parityComponent} />}
           />;
 
@@ -201,9 +199,6 @@ export const SideNavLayout = ({
   // TODO: SEO
   return (
     <div className="ws-side-nav-layout">
-      <Helmet>
-        <title>{pageTitle}</title>
-      </Helmet>
       <div id="ws-page-banners">
         {showGdprBanner && <GdprBanner />}
       </div>

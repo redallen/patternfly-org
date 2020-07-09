@@ -5,7 +5,6 @@
  * See: https://www.gatsbyjs.org/docs/static-query/
  */
 import React from 'react';
-import { Helmet } from 'react-helmet';
 
 import { Page, PageHeader, Brand, Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
 import logo from '../logo.svg';
@@ -49,10 +48,7 @@ export const TrainingLayout = ({ trainingType, katacodaId, location }) => {
   // TODO: Extract SEO to component
   return (
     <div>
-      <Helmet>
-        <title>{title}</title>
-        <script src="//katacoda.com/embed.js"></script>
-      </Helmet>
+      {/* <script src="//katacoda.com/embed.js"></script> */}
       <Page header={Header} style={{ height: '100vh' }}>
         <div id="katacoda-scenario-1"
           data-katacoda-id={'patternfly/courses/' + fileName}

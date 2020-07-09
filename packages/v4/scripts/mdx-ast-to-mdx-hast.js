@@ -1,3 +1,4 @@
+const path = require('path');
 const toHAST = require('mdast-util-to-hast');
 const detab = require('detab');
 const acorn = require('acorn');
@@ -7,7 +8,7 @@ const all = require('mdast-util-to-hast/lib/all');
 function mdxAstToMdxHast() {
   const jsxParser = acorn.Parser.extend(jsx());
   
-  return tree => {
+  return (tree, file) => {
     const handlers = {
       // `inlineCode` gets passed as `code` by the HAST transform.
       // This makes sure it ends up being `inlineCode`
@@ -25,9 +26,8 @@ function mdxAstToMdxHast() {
         });
       },
       code(h, node) {
-        const code = node.value ? detab(node.value + '\n') : '';
         const properties = {
-          code
+          code: node.value ? detab(node.value + '\n').trim() : ''
         };
         
         if (node.lang) {
@@ -35,15 +35,21 @@ function mdxAstToMdxHast() {
         }
 
         if (node.meta) {
-          const jsxAttributes = jsxParser.parse(`<Component ${node.meta} />`)
+          try {
+            const jsxAttributes = jsxParser.parse(`<Component ${node.meta} />`)
             .body[0]
             .expression
             .openingElement
             .attributes;
 
-          jsxAttributes.forEach(attr => {
-            properties[attr.name.name] = attr.value ? attr.value.value : true;
-          });
+            jsxAttributes.forEach(attr => {
+              properties[attr.name.name] = attr.value ? attr.value.value : true;
+            }); 
+          }
+          catch(error) {
+            const relPath = path.relative(process.cwd(), file.path);
+            throw new Error(`Error parsing "${node.meta}" in file ${relPath}:\n${error}`);
+          }
         }
         return Object.assign({}, node, {
           type: 'element',
@@ -72,15 +78,16 @@ function mdxAstToMdxHast() {
           type: 'jsx'
         })
       }
-    }
+    };
 
     const hast = toHAST(tree, {
       handlers,
       // Enable passing of HTML nodes to HAST as raw nodes
       allowDangerousHtml: true
-    })
+    });
 
-    return hast
+
+    return hast;
   }
 }
 

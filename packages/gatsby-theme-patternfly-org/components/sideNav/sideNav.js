@@ -22,7 +22,6 @@ export const SideNav = ({
   location,
   context,
   allPages,
-  sideNavContexts,
   pageSource,
   parityComponent
 }) => {
@@ -49,7 +48,7 @@ export const SideNav = ({
     return accum;
   }, {});
 
-  const sideNavItems = sideNavContexts[context.replace(/-/g, '_')] || [];
+  const sideNavItems = [];
 
   // TODO: Get a better design and get rid of this thing.
   const contextSwitcher = pageSource === 'org'

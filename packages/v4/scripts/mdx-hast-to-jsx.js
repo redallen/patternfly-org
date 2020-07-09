@@ -1,15 +1,17 @@
 const styleToObject = require('style-to-object');
 const camelCaseCSS = require('camelcase-css');
-const { toTemplateLiteral } = require('@mdx-js/util')
+const { toTemplateLiteral } = require('@mdx-js/util');
 
-function toJSX(node, parentNode = {}, options = {}) {
-  const { preserveNewlines = false } = options;
+function toJSX(node, parentNode = {}, options) {
+  const { preserveNewlines = false, indent = 2, getRelPath, getPageData } = options;
+  const pageData = getPageData();
   let children = '';
+  const exportName = `${pageData.componentName}Docs`;
 
   if (node.type === 'root') {
     const importNodes = [];
     const jsxNodes = [];
-    
+
     for (const childNode of node.children) {
       if (childNode.type === 'import') {
         importNodes.push(childNode);
@@ -20,15 +22,26 @@ function toJSX(node, parentNode = {}, options = {}) {
     }
 
     const importStatements = importNodes
-      .map(childNode => toJSX(childNode, node))
+      .map(childNode => toJSX(childNode, node, options))
+      .map(imp => imp.replace(/(['"])\./, (_, match) => `${match}${getRelPath()}`))
+      .concat([
+        "import React from 'react';",
+        "import { Example } from 'gatsby-theme-patternfly-org/components';"
+      ])
       .join('\n');
 
-    const componentStatement = `export default props => (
-  <React.Fragment>
-    ${jsxNodes.map(childNode => toJSX(childNode, node)).join('')}
-  </React.Fragment>)`;
+    const childNodes = jsxNodes
+      .map(childNode => toJSX(childNode, node, options))
+      .join('');
 
-    return `${importStatements}\n${componentStatement}`;
+    return `${importStatements}
+
+export const ${exportName} = ${JSON.stringify(pageData, null, 2)};
+${exportName}.DocComponent = () => (
+  <div className="ws-md-content">${childNodes.replace(/\n\s*\n/g, '\n')}
+  </div>
+);
+`;
   }
 
   if (node.properties) {
@@ -50,16 +63,21 @@ function toJSX(node, parentNode = {}, options = {}) {
     // Tell all children inside <pre> tags to preserve newlines as text nodes
     children = node.children
       .map(childNode => toJSX(childNode, node, {
+        ...options ,
         preserveNewlines: preserveNewlines || node.tagName === 'pre',
-        ...options 
+        indent: indent + 1
       }))
       .join('');
   }
 
+  const indentText = '  '.repeat(indent);
   if (node.type === 'element') {
     const props = node.properties && Object.keys(node.properties).length > 0 && JSON.stringify(node.properties);
 
-    return `<${node.tagName}${props ? ` {...${props}}` : ''}>${children}</${node.tagName}>`
+    return `
+${indentText}<${node.tagName}${props ? ` {...${props}}` : ''}${node.tagName === 'Example' ? ` {...${exportName}}` : ''}>
+${indentText}  ${children}
+${indentText}</${node.tagName}>`
   }
 
   // Wraps text nodes inside template string, so that we don't run into escaping issues.
@@ -84,7 +102,7 @@ function toJSX(node, parentNode = {}, options = {}) {
   }
 }
 
-function compile(options = {}) {
+function compile(options) {
   this.Compiler = tree => toJSX(tree, {}, options);
 }
 

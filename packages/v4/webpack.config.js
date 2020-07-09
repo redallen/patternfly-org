@@ -13,7 +13,7 @@ module.exports = (_env, argv) => {
   const isDev = argv.mode === 'development'
 
   return {
-    entry: './src/app.tsx',
+    entry: './src/app.js',
     output: {
       path: path.resolve('dist'),
       filename: '[name].[contenthash:8].bundle.js'
@@ -84,7 +84,8 @@ module.exports = (_env, argv) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './src/index.html'
+        template: './src/index.html',
+        base: '/'
       }),
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash].css',

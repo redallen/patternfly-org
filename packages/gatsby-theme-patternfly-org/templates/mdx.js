@@ -12,8 +12,8 @@ import {
   Title
 } from '@patternfly/react-core';
 import { SideNavLayout, TrainingLayout } from '../layouts';
-import { AutoLinkHeader, Example, CSSVariables, PropsTable, commonComponents } from '../components';
-import { getId , slugger, capitalize} from '../helpers';
+import { AutoLinkHeader, CSSVariables, PropsTable } from '../components';
+import { slugger, capitalize} from '../helpers';
 import versions from '../versions.json';
 import './mdx.css';
 
@@ -28,49 +28,34 @@ const getSourceTitle = source => {
   }
 }
 
-const MDXTemplate = ({ data, location, pageContext }) => {
-  if (location.state && location.state.trainingType && location.state.katacodaId) {
-    return (
-      <TrainingLayout
-        location={location}
-        trainingType={location.state.trainingType}
-        katacodaId={location.state.katacodaId} />
-    );
-  }
-  const { cssPrefix, hideTOC, beta, katacodaBroken, optIn, hideDarkMode, showTitle, releaseNoteTOC, hideSource } = data.doc.frontmatter;
-  const { componentName, navSection } = data.doc.fields;
-  const { title, source, tableOfContents, htmlExamples, propComponents = [''], showBanner, showGdprBanner, showFooter, sourceLink } = pageContext;
-  const props = data.props && data.props.nodes && propComponents
-    ? propComponents
-      .filter(name => name !== '') // Filter default entry we make for GraphQL schema
-      .map(name => {
-        const propTable = data.props.nodes.find(node => node.name === name);
-        if (!propTable) {
-          console.warn(`PropComponent "${name}" specified in frontmatter, but not found at runtime.`);
-        }
-
-        return propTable;
-      })
-      .filter(Boolean)
-    : [];
-
-  let parityComponent = undefined;
-  if (data.designDoc && ['components', 'beta', 'utilities'].includes(navSection)) {
-    const { reactComponentName, coreComponentName } = data.designDoc.frontmatter;
-    if (source === 'core' && reactComponentName) {
-      parityComponent = `${navSection}/${reactComponentName}`;
-    }
-    else if (source === 'react' && coreComponentName) {
-      parityComponent = `${navSection}/${coreComponentName}`;
-    }
-  }
-
+const MDXTemplate = ({
+  location,
+  cssPrefix,
+  hideTOC,
+  beta,
+  optIn,
+  showTitle,
+  releaseNoteTOC,
+  katacodaBroken,
+  title,
+  source,
+  tableOfContents = [],
+  propComponents = [],
+  showBanner,
+  showGdprBanner,
+  showFooter,
+  sourceLink,
+  DocComponent,
+  props = []
+}) => {
   // TODO: Stop hiding TOC in design pages
   const TableOfContents = () => (
     <React.Fragment>
       {showTitle && (
         <React.Fragment>
-          <Title size="4xl" headingLevel="h1" className="ws-page-title">{title}</Title>
+          <Title size="4xl" headingLevel="h1" className="ws-page-title">
+            {title}
+          </Title>
           {optIn && (
             <Alert
               variant="info"
@@ -85,11 +70,6 @@ const MDXTemplate = ({ data, location, pageContext }) => {
       )}
       {!hideTOC && (
         <React.Fragment>
-          {!hideSource && (
-            <label id="source-label" className="ws-framework-title pf-c-title" aria-hidden>
-              {getSourceTitle(source)}
-            </label>
-          )}
           <Title headingLevel="h1" id="component-title" size="4xl" className="ws-page-title" aria-labelledby="source-label component-title">{title}</Title>
           {optIn && (
             <Alert
@@ -123,7 +103,6 @@ const MDXTemplate = ({ data, location, pageContext }) => {
               We'll be up and running in a bit, so check back soon. Thanks!
             </Alert>
           )}
-          {/* Design docs should not apply to demos and overview */}
           {releaseNoteTOC && (
             <Grid hasGutter className="ws-release-notes-toc">
               {versions.Releases
@@ -207,12 +186,6 @@ const MDXTemplate = ({ data, location, pageContext }) => {
     </React.Fragment>
   );
 
-  const MDXContent = () => (
-    <div>
-      mdx content
-    </div>
-  );
-
   const FeedbackSection = () => {
     const issueBody = encodeURIComponent(`\n\n\nProblem is in [this file.](${sourceLink})`);
     const issueLink = sourceLink.replace(/\/blob\/master\/.*/, `/issues/new?title=&body=${issueBody}`);
@@ -233,22 +206,16 @@ const MDXTemplate = ({ data, location, pageContext }) => {
       <SideNavLayout
         location={location}
         context={source}
-        parityComponent={parityComponent}
         showBanner={showBanner}
         showGdprBanner={showGdprBanner}
         showFooter={showFooter}
-        pageTitle={pageContext.title}
+        pageTitle={title}
       >
         <PageSection id="main-content" className="ws-section">
           <TableOfContents />
-
-          {/* Wrap in div for :last-child CSS selectors */}
-          <div>
-            <MDXContent />
-          </div>
-
-          {props.length > 0 && <PropsSection />}
-          {cssPrefix && <CSSVariablesSection />}
+          <DocComponent />
+          {/* {props.length > 0 && <PropsSection />} */}
+          {/* {cssPrefix && <CSSVariablesSection />} */}
           {/* {sourceLink && <FeedbackSection />} */}
         </PageSection>
       </SideNavLayout>
