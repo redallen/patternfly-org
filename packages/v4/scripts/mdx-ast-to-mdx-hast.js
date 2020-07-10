@@ -27,7 +27,8 @@ function mdxAstToMdxHast() {
       },
       code(h, node) {
         const properties = {
-          code: node.value ? detab(node.value + '\n').trim() : ''
+          code: node.value ? detab(node.value + '\n').trim() : '',
+          title: node.title
         };
         
         if (node.lang) {

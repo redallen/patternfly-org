@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from '@reach/router';
-import { SideNavLayout } from 'gatsby-theme-patternfly-org/layouts';
+import { PageLayout } from 'theme-patternfly-org/layouts';
 import {
   Flex,
   FlexItem,
@@ -20,7 +20,7 @@ import modular from '../images/modular.svg';
 import scale from '../images/scale.svg';
 import consistent from '../images/consistent.svg';
 import open from '../images/open.svg';
-import { AutoLinkHeader } from 'gatsby-theme-patternfly-org/components/autoLinkHeader/autoLinkHeader';
+import { AutoLinkHeader } from 'theme-patternfly-org/components/autoLinkHeader/autoLinkHeader';
 import './homepage.css';
 
 const aboutPatternFly = `Hello, we're PatternFly.`;
@@ -54,7 +54,7 @@ const topNavItems = [
 
 const IndexPage = ({ location }) => {
   return (
-  <SideNavLayout location={location} hideSideNav showGdprBanner={true} showBanner={true} context="org" topNavItems={topNavItems}>
+  <PageLayout location={location} hideSideNav showGdprBanner={true} showBanner={true} context="org" topNavItems={topNavItems}>
     <PageSection
       variant={PageSectionVariants.light}
       className="pf4-c-background-image ws-homepage-main-section"
@@ -313,7 +313,7 @@ const IndexPage = ({ location }) => {
         </GridItem>
       </Grid>
     </PageSection>
-  </SideNavLayout>
+  </PageLayout>
 )};
 
 export default IndexPage;

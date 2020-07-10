@@ -1,4 +1,4 @@
-// File exists to allow `require.resolve('gatsby-theme-patternfly-org')`
+// File exists to allow `require.resolve('theme-patternfly-org')`
 
 // If React or release notes aren't included
 // We can't include these in gatsby-node since we aren't gatsby-mdx

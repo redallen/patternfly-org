@@ -6,8 +6,8 @@ const remove = require('unist-util-remove');
 const toVfile = require('to-vfile'); // https://github.com/vfile/vfile
 const vfileReport = require('vfile-reporter');
 const yaml = require('js-yaml'); // https://github.com/nodeca/js-yaml
-const { slugger } = require('gatsby-theme-patternfly-org/helpers/slugger');
-const { extractTableOfContents } = require('gatsby-theme-patternfly-org/helpers/extractTableOfContents');
+const { slugger } = require('theme-patternfly-org/helpers/slugger');
+const { extractTableOfContents } = require('theme-patternfly-org/helpers/extractTableOfContents');
 // var mdx = require('@mdx-js/mdx')
 
 const makeSlug = (source, section, componentName) => {

@@ -11,79 +11,50 @@ import {
   SkipToContent,
   Title
 } from '@patternfly/react-core';
-import { SideNavLayout, TrainingLayout } from '../layouts';
+import { PageLayout } from '../layouts';
 import { AutoLinkHeader, CSSVariables, PropsTable } from '../components';
 import { slugger, capitalize} from '../helpers';
 import versions from '../versions.json';
 import './mdx.css';
 
-const getSourceTitle = source => {
-  switch(source) {
-    case 'core':
-      return 'HTML';
-    case 'shared':
-      return 'HTML/React';
-    default:
-      return capitalize(source);
-  }
-}
-
-const MDXTemplate = ({
+export const MDXTemplate = ({
   location,
   cssPrefix,
   hideTOC,
   beta,
   optIn,
-  showTitle,
   releaseNoteTOC,
   katacodaBroken,
   title,
-  source,
   tableOfContents = [],
   propComponents = [],
-  showBanner,
-  showGdprBanner,
-  showFooter,
   sourceLink,
-  DocComponent,
-  props = []
+  DocComponent = () => null,
+  layoutOptions,
+  props = [],
+  uri
 }) => {
   // TODO: Stop hiding TOC in design pages
   const TableOfContents = () => (
     <React.Fragment>
-      {showTitle && (
-        <React.Fragment>
-          <Title size="4xl" headingLevel="h1" className="ws-page-title">
-            {title}
-          </Title>
-          {optIn && (
-            <Alert
-              variant="info"
-              title="Opt-in feature"
-              className="pf-u-my-md"
-              isInline
-            >
-              {optIn}
-            </Alert>
-          )}
-        </React.Fragment>
+      <Title size="4xl" headingLevel="h1" className="ws-page-title">
+        {title}
+      </Title>
+      {optIn && (
+        <Alert
+          variant="info"
+          title="Opt-in feature"
+          className="pf-u-my-md"
+          isInline
+        >
+          {optIn}
+        </Alert>
       )}
       {!hideTOC && (
         <React.Fragment>
-          <Title headingLevel="h1" id="component-title" size="4xl" className="ws-page-title" aria-labelledby="source-label component-title">{title}</Title>
-          {optIn && (
-            <Alert
-              variant="info"
-              title="Opt-in feature"
-              className="pf-u-my-md"
-              isInline
-            >
-              {optIn}
-            </Alert>
-          )}
           {beta && (
             <Alert
-              variant={'info'}
+              variant="info"
               title="Beta feature"
               className="pf-u-my-md"
               style={{ marginBottom: '1rem' }}
@@ -94,7 +65,7 @@ const MDXTemplate = ({
           )}
           {katacodaBroken && (
             <Alert
-              variant={'danger'}
+              variant="danger"
               title="Down for maintenance"
               className="pf-u-my-md"
               style={{ marginBottom: '1rem' }}
@@ -203,13 +174,9 @@ const MDXTemplate = ({
   return (
     <React.Fragment>
       <SkipToContent href="#main-content">Skip to Content</SkipToContent>
-      <SideNavLayout
+      <PageLayout
         location={location}
-        context={source}
-        showBanner={showBanner}
-        showGdprBanner={showGdprBanner}
-        showFooter={showFooter}
-        pageTitle={title}
+        {...layoutOptions}
       >
         <PageSection id="main-content" className="ws-section">
           <TableOfContents />
@@ -218,9 +185,7 @@ const MDXTemplate = ({
           {/* {cssPrefix && <CSSVariablesSection />} */}
           {/* {sourceLink && <FeedbackSection />} */}
         </PageSection>
-      </SideNavLayout>
+      </PageLayout>
     </React.Fragment>
   );
 }
-
-export default MDXTemplate;

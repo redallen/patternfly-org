@@ -90,7 +90,7 @@
 }
 
 /* serves as the main page container */
-.ws-side-nav-layout {
+.ws-page-layout {
   height: 100%;
   display: flex;
   flex-direction: column;

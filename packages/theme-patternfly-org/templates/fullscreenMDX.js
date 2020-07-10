@@ -1,6 +1,5 @@
 import React from 'react';
 import { LiveProvider, LivePreview } from 'react-live';
-import { useMDXScope } from 'gatsby-plugin-mdx/context';
 import { transformCode } from '../helpers/transformCode';
 import './fullscreen.css';
 
@@ -8,7 +7,7 @@ const FullscreenMDXTemplate = ({ pageContext }) => {
   const { wrapperTag: WrapperTag, title, code } = pageContext;
   return (
     <LiveProvider
-      scope={useMDXScope()}
+      scope={{}}
       code={code}
       transformCode={c => transformCode(c, 'jsx')}
     >

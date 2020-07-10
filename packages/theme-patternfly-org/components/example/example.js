@@ -26,7 +26,7 @@ export const Example = ({
   lang,
   source = 'core',
   noLive,
-  title = 'no title',
+  title = 'Untitled',
   isFullscreen,
   isBeta,
   componentName,

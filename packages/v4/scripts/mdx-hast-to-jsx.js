@@ -2,6 +2,23 @@ const styleToObject = require('style-to-object');
 const camelCaseCSS = require('camelcase-css');
 const { toTemplateLiteral } = require('@mdx-js/util');
 
+const styledMdTags = [
+  'p',
+  'ul',
+  'ul',
+  'ul',
+  'ol',
+  'li',
+  'dl',
+  'blockquote',
+  'small',
+  'hr',
+  'dt',
+  'code',
+  'table',
+  'img'
+];
+
 function toJSX(node, parentNode = {}, options) {
   const { preserveNewlines = false, indent = 2, getRelPath, getPageData } = options;
   const pageData = getPageData();
@@ -26,7 +43,7 @@ function toJSX(node, parentNode = {}, options) {
       .map(imp => imp.replace(/(['"])\./, (_, match) => `${match}${getRelPath()}`))
       .concat([
         "import React from 'react';",
-        "import { Example } from 'gatsby-theme-patternfly-org/components';"
+        "import { Example, AutoLinkHeader } from 'theme-patternfly-org/components';"
       ])
       .join('\n');
 
@@ -38,8 +55,8 @@ function toJSX(node, parentNode = {}, options) {
 
 export const ${exportName} = ${JSON.stringify(pageData, null, 2)};
 ${exportName}.DocComponent = () => (
-  <div className="ws-md-content">${childNodes.replace(/\n\s*\n/g, '\n')}
-  </div>
+  <React.Fragment>${childNodes.replace(/\n\s*\n/g, '\n')}
+  </React.Fragment>
 );
 `;
   }
@@ -72,10 +89,24 @@ ${exportName}.DocComponent = () => (
 
   const indentText = '  '.repeat(indent);
   if (node.type === 'element') {
+    // AutoLinkHeader
+    if (node.tagName.match(/h\d/)) {
+      node.properties.size = node.tagName;
+      node.properties.className = node.properties.className || '';
+      node.properties.className += node.properties.className ? ' ' : '';
+      node.properties.className += `ws-title ws-${node.tagName}`;
+      node.tagName = 'AutoLinkHeader';
+    }
+    // ws-* styles
+    else if (styledMdTags.includes(node.tagName)) {
+      node.properties.className = node.properties.className || '';
+      node.properties.className += node.properties.className ? ' ' : '';
+      node.properties.className += `ws-${node.tagName}`;
+    }
     const props = node.properties && Object.keys(node.properties).length > 0 && JSON.stringify(node.properties);
 
     return `
-${indentText}<${node.tagName}${props ? ` {...${props}}` : ''}${node.tagName === 'Example' ? ` {...${exportName}}` : ''}>
+${indentText}<${node.tagName}${node.tagName === 'Example' ? ` {...${exportName}}` : ''}${props ? ` {...${props}}` : ''}>
 ${indentText}  ${children}
 ${indentText}</${node.tagName}>`
   }

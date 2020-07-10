@@ -1,2 +1,2 @@
-export * from './sideNavLayout/sideNavLayout';
+export * from './pageLayout/pageLayout';
 export * from './trainingLayout/trainingLayout';

@@ -5,7 +5,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const SizePlugin = require('size-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -31,7 +30,7 @@ module.exports = (_env, argv) => {
           test: /\.[tj]sx?$/,
           include: [
             path.resolve(__dirname, 'src'),
-            path.resolve(__dirname, '../gatsby-theme-patternfly-org')
+            path.resolve(__dirname, '../theme-patternfly-org')
           ],
           exclude: /node_modules/,
           use: {
@@ -93,7 +92,7 @@ module.exports = (_env, argv) => {
       }),
       new webpack.HashedModuleIdsPlugin(),
       new CopyPlugin({patterns: [
-        { from: require.resolve('gatsby-theme-patternfly-org/versions.json'), to: 'versions.json' }
+        { from: require.resolve('theme-patternfly-org/versions.json'), to: 'versions.json' }
       ]}),
       ...(isDev
         ? [
