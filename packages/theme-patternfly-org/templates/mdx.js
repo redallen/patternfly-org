@@ -26,7 +26,7 @@ export const MDXTemplate = ({
   releaseNoteTOC,
   katacodaBroken,
   title,
-  tableOfContents = [],
+  toc = [],
   propComponents = [],
   sourceLink,
   DocComponent = () => null,
@@ -78,7 +78,7 @@ export const MDXTemplate = ({
             <Grid hasGutter className="ws-release-notes-toc">
               {versions.Releases
                 .filter(version => (
-                  tableOfContents.some(header => header.includes(version.name))))
+                  toc.some(header => header.includes(version.name))))
                 .slice(0, 6)                         // limit to newest releases
                 .map(version => {
                   const [year, month, day] = version.date.split('-');
@@ -88,7 +88,7 @@ export const MDXTemplate = ({
                       day: 'numeric',
                       year: 'numeric'
                     });
-                  const releaseTitle = tableOfContents.find(heading => heading.includes(version.name));
+                  const releaseTitle = toc.find(heading => heading.includes(version.name));
                   return releaseTitle && (
                     <GridItem sm={6} md={4} key={version.name}>
                       <Card>
@@ -114,7 +114,7 @@ export const MDXTemplate = ({
               }
             </Grid>
           )}
-          {!releaseNoteTOC && tableOfContents.map(heading => (
+          {!releaseNoteTOC && toc.map(heading => (
             <a key={heading} href={`#${slugger(heading)}`} className="ws-toc">
               {heading}
             </a>

@@ -164,7 +164,7 @@ export const PageLayout = ({
   const Header = (
     <PageHeader
       className="ws-page-header"
-      headerTools={(hasSearch || hasVersionSwitcher) && getHeaderTools(versions)}
+      headerTools={(hasSearch || hasVersionSwitcher) && getHeaderTools(versions, hasSearch, hasVersionSwitcher)}
       logo={prnum ? `PR #${prnum}` : <Brand src={logo} alt="Patternfly Logo" />}
       logoProps={{ href: prurl || '/' }}
       showNavToggle={!hideSideNav}

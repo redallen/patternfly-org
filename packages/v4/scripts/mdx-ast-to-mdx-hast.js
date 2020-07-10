@@ -4,11 +4,15 @@ const detab = require('detab');
 const acorn = require('acorn');
 const jsx = require('acorn-jsx');
 const all = require('mdast-util-to-hast/lib/all');
+const himage = require('mdast-util-to-hast/lib/handlers/image');
+
+let srcCounter = 0;
 
 function mdxAstToMdxHast() {
   const jsxParser = acorn.Parser.extend(jsx());
   
   return (tree, file) => {
+    const srcImports = [];
     const handlers = {
       // `inlineCode` gets passed as `code` by the HAST transform.
       // This makes sure it ends up being `inlineCode`
@@ -62,22 +66,39 @@ function mdxAstToMdxHast() {
       import(h, node) {
         return Object.assign({}, node, {
           type: 'import'
-        })
+        });
       },
       export(h, node) {
         return Object.assign({}, node, {
           type: 'export'
-        })
+        });
       },
       comment(h, node) {
         return Object.assign({}, node, {
           type: 'comment'
-        })
+        });
       },
       jsx(h, node) {
         return Object.assign({}, node, {
           type: 'jsx'
-        })
+        });
+      },
+      image(h, node) {
+        const srcImport = `srcImport${srcCounter++}`;
+        const props = {
+          src: srcImport,
+          alt: node.alt
+        };
+        if (node.title !== null && node.title !== undefined) {
+          props.title = node.title
+        }
+        // Add import statement
+        srcImports.push({
+          type: 'import',
+          value: `import ${srcImport} from '${node.url}';`
+        });
+      
+        return h(node, 'img', props);
       }
     };
 
@@ -87,6 +108,7 @@ function mdxAstToMdxHast() {
       allowDangerousHtml: true
     });
 
+    hast.children.unshift(...srcImports);
 
     return hast;
   }

@@ -1,12 +1,11 @@
 import React from 'react';
-import { SideNavLayout } from 'theme-patternfly-org/layouts';
+import { PageLayout } from 'theme-patternfly-org/layouts';
 import { ChatIcon, QuestionIcon, CatalogIcon, MailBulkIcon } from '@patternfly/react-icons';
 import { Grid, GridItem, PageSection, PageSectionVariants, Split, SplitItem, Title } from '@patternfly/react-core';
 import "./get-in-touch.css";
 
-const GetInTouch = ({ location }) => {
-  return (
-  <SideNavLayout location={location} hideSideNav showGdprBanner={true}>
+export const GetInTouchPage = ({ location, layoutOptions }) => (
+  <PageLayout location={location} hasGdprBanner {...layoutOptions}>
     <PageSection
       variant={PageSectionVariants.light}
       className="ws-section ws-get-in-touch"
@@ -56,7 +55,5 @@ const GetInTouch = ({ location }) => {
         </GridItem>
       </Grid>
     </PageSection>
-  </SideNavLayout>
-)};
-
-export default GetInTouch;
+  </PageLayout>
+);

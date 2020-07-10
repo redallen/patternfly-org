@@ -8,6 +8,8 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
+const pfDir = path.dirname(require.resolve('@patternfly/patternfly/patternfly.css'));
+
 module.exports = (_env, argv) => {
   const isDev = argv.mode === 'development'
 
@@ -91,9 +93,13 @@ module.exports = (_env, argv) => {
         chunkFilename: '[name].[contenthash].css',
       }),
       new webpack.HashedModuleIdsPlugin(),
-      new CopyPlugin({patterns: [
-        { from: require.resolve('theme-patternfly-org/versions.json'), to: 'versions.json' }
-      ]}),
+      new CopyPlugin({
+        patterns: [
+          { from: require.resolve('theme-patternfly-org/versions.json'), to: 'versions.json' },
+          { from: path.join(pfDir, 'assets/images'), to: 'assets/images' },
+          { from: path.join(pfDir, 'assets/fonts'), to: 'assets/fonts' }
+        ]
+      }),
       ...(isDev
         ? [
           // new ForkTsCheckerWebpackPlugin({

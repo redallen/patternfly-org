@@ -54,10 +54,12 @@ function toJSX(node, parentNode = {}, options) {
     return `${importStatements}
 
 export const ${exportName} = ${JSON.stringify(pageData, null, 2)};
-${exportName}.DocComponent = () => (
-  <React.Fragment>${childNodes.replace(/\n\s*\n/g, '\n')}
-  </React.Fragment>
-);
+${exportName}.DocComponent = function ${exportName}DocComponent() {
+  return (
+    <React.Fragment>${childNodes.replace(/\n\s*\n/g, '\n')}
+    </React.Fragment>
+  );
+};
 `;
   }
 
@@ -103,10 +105,16 @@ ${exportName}.DocComponent = () => (
       node.properties.className += node.properties.className ? ' ' : '';
       node.properties.className += `ws-${node.tagName}`;
     }
+
+    const srcImport = node.properties.src;
+    if (node.tagName === 'img') {
+      delete node.properties.src;
+    }
+
     const props = node.properties && Object.keys(node.properties).length > 0 && JSON.stringify(node.properties);
 
     return `
-${indentText}<${node.tagName}${node.tagName === 'Example' ? ` {...${exportName}}` : ''}${props ? ` {...${props}}` : ''}>
+${indentText}<${node.tagName}${node.tagName === 'Example' ? ` {...${exportName}}` : ''}${node.tagName === 'img' && srcImport ? ` src={${srcImport}}` : ''}${props ? ` {...${props}}` : ''}>
 ${indentText}  ${children}
 ${indentText}</${node.tagName}>`
   }

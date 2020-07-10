@@ -1,9 +1,7 @@
 ---
 title: Develop
-hideTOC: true
-showTitle: true
+section: contribute
 ---
-
 
 ## Ways to contribute
 1. Pick an open issue in the [pf-next repo](https://github.com/patternfly/patternfly-next/issues) and make a comment that you would like to contribute

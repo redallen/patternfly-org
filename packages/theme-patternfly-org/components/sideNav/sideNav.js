@@ -46,7 +46,7 @@ export const SideNav = ({
             if (!section) {
               // Single nav item
               return renderNavItem({
-                text: text || capitalize(href.replace(/\//g, '').replace(/-+/g, ' ')),
+                text: text || capitalize(href.replace(/\//g, '').replace(/-/g, ' ')),
                 href
               });
             }
@@ -55,7 +55,7 @@ export const SideNav = ({
               return (
                 <NavExpandable
                   key={section}
-                  title={capitalize(section)}
+                  title={capitalize(section.replace(/-/g, ' '))}
                   isActive={isActive}
                   isExpanded={isActive}
                   className="ws-side-nav-group"

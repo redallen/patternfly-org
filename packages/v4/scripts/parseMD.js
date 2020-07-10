@@ -10,6 +10,8 @@ const { slugger } = require('theme-patternfly-org/helpers/slugger');
 const { extractTableOfContents } = require('theme-patternfly-org/helpers/extractTableOfContents');
 // var mdx = require('@mdx-js/mdx')
 
+const outputBase = path.join(__dirname, `../src/generated`);
+
 const makeSlug = (source, section, componentName) => {
   let url = '';
 
@@ -32,10 +34,10 @@ const makeSlug = (source, section, componentName) => {
   return url;
 }
 
-function toReactComponent(mdFilePath, source, outputBase) {
+function toReactComponent(mdFilePath, source) {
   // vfiles allow for nicer error messages and have native `unified` support
   const vfile = toVfile.readSync(mdFilePath);
-  const componentName = vfile.stem; // Name (without extension)
+  const componentName = vfile.stem.replace(/-/g, ''); // Name (without extension)
 
   const relPath = path.relative(process.cwd(), vfile.path);
   console.log(relPath);
@@ -114,27 +116,42 @@ function toReactComponent(mdFilePath, source, outputBase) {
   };
 }
 
-
-function sourceMD(files, source) {
-  const outputBase = path.join(__dirname, `../src/generated`);
-
+function parseMD() {
   const index = [];
-  files.forEach(file => {
-    const { jsx, outPath } = toReactComponent(file, source, outputBase);
-
-    fs.outputFileSync(outPath, jsx);
-    index.push(path.relative(outputBase, outPath));
-  });
-
+  
+  function sourceMD(files, source) {
+  
+    files.forEach(file => {
+      const { jsx, outPath } = toReactComponent(file, source);
+  
+      fs.outputFileSync(outPath, jsx);
+      index.push(path.relative(outputBase, outPath));
+    });
+  }
+  
+  // Source org md
+  sourceMD(
+    glob.sync(path.join(__dirname, '../src/content/contribute/**/*.md')),
+    'pages-contribute'
+  );
+  
+  sourceMD(
+    glob.sync(path.join(__dirname, '../src/content/get-started/**/*.md')),
+    'pages-get-started'
+  );
+  
+  // Source core md
+  const coreMDPath = require
+    .resolve('@patternfly/patternfly/package.json')
+    .replace('package.json', 'docs');
+  
+  sourceMD(
+    glob.sync(path.join(coreMDPath, '/**/*.md'), { ignore: path.join(coreMDPath, '/pages/**') }),
+    'core'
+  );
+  
   const indexContent = index.map(file => `export * from './${file}';`).join('\n');
-  fs.outputFileSync(path.join(outputBase, 'index-core.js'), indexContent);
+  fs.outputFileSync(path.join(outputBase, 'index.js'), indexContent);
 }
 
-// Source core md
-const coreMDPath = require
-  .resolve('@patternfly/patternfly/package.json')
-  .replace('package.json', 'docs');
-
-const mdFiles = glob.sync(coreMDPath + '/**/*.md', { ignore: coreMDPath + '/pages/**' });
-sourceMD(mdFiles, 'core');
-
+parseMD();

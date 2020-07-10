@@ -4,7 +4,6 @@ module.exports = {
   hasSearch: true,
   hasVersionSwitcher: true,
   sideNav: [
-    { href: '/', text: 'Home' },
     { section: 'get-started' },
     { section: 'styles' },
     { section: 'content' },
