@@ -1,7 +1,6 @@
 ---
-title: Colors
+id: Colors
 section: styles
-hideSource: true
 ---
 import { Alert, Grid, GridItem, Divider } from '@patternfly/react-core';
 import { Link } from '@reach/router';

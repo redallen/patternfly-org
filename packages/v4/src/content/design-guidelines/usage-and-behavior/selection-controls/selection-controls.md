@@ -1,8 +1,6 @@
 ---
-title: Selection controls
+id: Selection controls
 section: usage and behavior
-hideTOC: true
-showTitle: true
 ---
 
 Selection controls allow the user to provide information by selecting from a known set of options or a constrained format/value range.

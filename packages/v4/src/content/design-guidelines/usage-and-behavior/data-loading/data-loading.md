@@ -1,8 +1,6 @@
 ---
-title: Data loading
+id: Data loading
 section: usage and behavior
-hideTOC: true
-showTitle: true
 ---
 
 Data loading patterns are used to inform users that objects are loading on the screen even though they have yet to appear. A component that we use to demonstrate data loading is a spinner.

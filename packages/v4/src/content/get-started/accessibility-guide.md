@@ -1,5 +1,5 @@
 ---
-title: Accessibility guide
+id: Accessibility guide
 section: get-started
 ---
 

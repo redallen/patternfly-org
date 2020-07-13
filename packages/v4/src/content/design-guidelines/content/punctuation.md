@@ -1,8 +1,6 @@
 ---
-title: Punctuation
+id: Punctuation
 section: content
-hideTOC: true
-showTitle: true
 ---
 
 ## Ampersand

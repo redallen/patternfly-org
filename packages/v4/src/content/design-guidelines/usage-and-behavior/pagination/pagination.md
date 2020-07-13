@@ -1,8 +1,6 @@
 ---
-title: Pagination
+id: Pagination
 section: usage and behavior
-hideTOC: true
-showTitle: true
 ---
 Pagination is used when you want to break up data into multiple pages. It is typically used within a table, list or card view.  If you choose to use infinite scrolling, then pagination would not be necessary. 
 

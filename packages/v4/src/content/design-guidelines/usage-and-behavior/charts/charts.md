@@ -1,8 +1,6 @@
 ---
-title: Charts
+id: Charts
 section: usage and behavior
-hideTOC: true
-showTitle: true
 ---
 
 _Charts are only available in React_

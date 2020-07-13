@@ -1,7 +1,6 @@
 ---
-title: Icons
+id: Icons
 section: styles
-hideSource: true
 ---
 import { Link } from '@reach/router';
 import { Card, CardBody, Divider, Flex, FlexItem, Grid, GridItem } from '@patternfly/react-core';

@@ -1,8 +1,6 @@
 ---
-title: Buttons
+id: Buttons
 section: usage and behavior
-hideTOC: true
-showTitle: true
 ---
 
 A button refers to a box area or text that can be clicked or tapped.

@@ -1,8 +1,6 @@
 ---
-title: Empty state
+id: Empty state
 section: usage and behavior
-hideTOC: true
-showTitle: true
 ---
 
 Empty states are UI screens that don't have any content on them, but content will populate once a user takes a certain action. Use an empty state to educate users and guide them with positive and proactive next steps in any situation where there is no data or information to display.

@@ -1,8 +1,6 @@
 ---
-title: Lists and tables
+id: Lists and tables
 section: usage and behavior
-hideTOC: true
-showTitle: true
 ---
 
 PatternFly offers two components for displaying large data sets: [data list](/documentation/react/components/datalist/) and [table](/documentation/react/components/table/). While they satisfy similar use cases, choosing the correct component to use in your design will be dependent on the type of data you need to display.

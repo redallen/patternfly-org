@@ -1,8 +1,6 @@
 ---
-title: Text input
+id: Text input
 section: usage and behavior
-hideTOC: true
-showTitle: true
 ---
 
 Use text input to gather free-form text from a user.

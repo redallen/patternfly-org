@@ -1,8 +1,6 @@
 ---
-title: Spacers
+id: Spacers
 section: styles
-hideTOC: true
-showTitle: true
 ---
 import { Link } from '@reach/router';
 import './spacers.css';
