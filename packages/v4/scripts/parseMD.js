@@ -12,7 +12,7 @@ const { extractTableOfContents } = require('theme-patternfly-org/helpers/extract
 
 const outputBase = path.join(__dirname, `../src/generated`);
 
-const makeSlug = (source, section, componentName) => {
+const makeSlug = (source, section, id) => {
   let url = '';
 
   if (['react', 'core',].includes(source)) {
@@ -29,7 +29,7 @@ const makeSlug = (source, section, componentName) => {
     url += `/${slugger(section)}`
   }
 
-  url += `/${slugger(componentName)}`;
+  url += `/${slugger(id)}`;
 
   return url;
 }
@@ -37,7 +37,6 @@ const makeSlug = (source, section, componentName) => {
 function toReactComponent(mdFilePath, source) {
   // vfiles allow for nicer error messages and have native `unified` support
   const vfile = toVfile.readSync(mdFilePath);
-  const componentName = vfile.stem.replace(/-/g, ''); // Name (without extension)
 
   const relPath = path.relative(process.cwd(), vfile.path);
   console.log(relPath);
@@ -54,13 +53,18 @@ function toReactComponent(mdFilePath, source) {
     .use(() => tree => {
       const yamlNode = tree.children.shift();
       frontmatter = yaml.safeLoad(yamlNode.value);
+
+      // Fail early
+      if (!frontmatter.id) {
+        throw new Error('id attribute is required in frontmatter for PatternFly docs');
+      }
       // Create TOC and pageData
       if (!frontmatter.hideTOC) {
         toc = extractTableOfContents(tree);
       }
       const slug = mdFilePath.includes('pages')
-        ? makeSlug('pages', null, frontmatter.id || componentName)
-        : makeSlug(source, frontmatter.section, frontmatter.id || componentName);
+        ? makeSlug('pages', null, frontmatter.id)
+        : makeSlug(source, frontmatter.section, frontmatter.id);
 
       outPath = path.join(outputBase, `${slug}.js`);
       // const props = propComponents
@@ -79,9 +83,8 @@ function toReactComponent(mdFilePath, source) {
         source,
         section: frontmatter.section || 'components',
         id: frontmatter.id,
-        title: frontmatter.title,
-        toc,
-        componentName
+        title: frontmatter.title || frontmatter.id,
+        toc
       };
     })
     // Not entirely sure what this does, but needed for mdx-ast-to-mdx-hast
@@ -113,7 +116,8 @@ function toReactComponent(mdFilePath, source) {
 
   return {
     jsx,
-    outPath
+    outPath,
+    pageData
   };
 }
 
@@ -121,9 +125,8 @@ function parseMD() {
   const index = [];
   
   function sourceMD(files, source) {
-  
     files.forEach(file => {
-      const { jsx, outPath } = toReactComponent(file, source);
+      const { jsx, outPath, pageData } = toReactComponent(file, source);
   
       fs.outputFileSync(outPath, jsx);
       index.push(path.relative(outputBase, outPath));
@@ -139,6 +142,11 @@ function parseMD() {
   sourceMD(
     glob.sync(path.join(__dirname, '../src/content/get-started/**/*.md')),
     'pages-get-started'
+  );
+
+  sourceMD(
+    glob.sync(path.join(__dirname, '../src/content/design-snippets/**/*.md')),
+    'design-snippets'
   );
   
   // Source core md

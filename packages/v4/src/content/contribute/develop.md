@@ -1,6 +1,5 @@
 ---
-id: develop
-title: Develop
+id: Develop
 section: contribute
 ---
 

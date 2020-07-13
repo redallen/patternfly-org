@@ -1,6 +1,5 @@
 ---
-id: design
-title: Design
+id: Design
 section: contribute
 ---
 

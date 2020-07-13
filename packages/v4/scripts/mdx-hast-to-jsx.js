@@ -24,7 +24,7 @@ const styledMdTags = [
 const jsxParser = acorn.Parser.extend(jsx());
 
 function toJSX(node, parentNode = {}, options) {
-  const { preserveNewlines = false, indent = 2, getRelPath, getPageData } = options;
+  const { preserveNewlines = false, indent = 3, getRelPath, getPageData } = options;
   const pageData = getPageData();
   let children = '';
   const exportName = pageData.slug.replace(/[\/-](.)?/g, (_, match) => capitalize(match)) + 'Docs';

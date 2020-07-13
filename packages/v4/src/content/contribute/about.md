@@ -1,6 +1,5 @@
 ---
-id: about
-title: About
+id: About
 section: contribute
 ---
 

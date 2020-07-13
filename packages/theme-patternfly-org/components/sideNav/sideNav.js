@@ -26,7 +26,7 @@ const renderNavItem = ({ text, href }) => {
 export const SideNav = ({
   location,
   sideNavItems, // From patternfly-docs.config.js
-  sectionedPages
+  idPages
 }) => (
   <Nav aria-label="Side Nav" theme="light">
     <NavList className="ws-side-nav-list">
@@ -38,7 +38,7 @@ export const SideNav = ({
             href
           });
         }
-        else if (section && sectionedPages[section]) {
+        else if (section && idPages[section]) {
           const isActive = location.pathname.includes(`/${slugger(section)}/`);
           return (
             <NavExpandable
@@ -48,8 +48,8 @@ export const SideNav = ({
               isExpanded={isActive}
               className="ws-side-nav-group"
             >
-              {sectionedPages[section]
-                .sort((a, b) => a.text.localeCompare(b.text))
+              {Object.entries(idPages[section])
+                .map(([title, { slug }]) => ({ text: title, href: slug }))
                 .map(renderNavItem)}
             </NavExpandable>
           );

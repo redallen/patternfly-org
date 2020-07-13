@@ -1,4 +1,5 @@
 ---
+id: About
 title: About PatternFly
 section: get-started
 ---

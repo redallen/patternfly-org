@@ -7,6 +7,7 @@ module.exports = {
     { section: 'get-started' },
     { section: 'styles' },
     { section: 'content' },
+    { section: 'charts' },
     { section: 'components' },
     { section: 'demos' },
     { section: 'layouts' },

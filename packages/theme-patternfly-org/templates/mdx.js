@@ -13,7 +13,7 @@ import {
 } from '@patternfly/react-core';
 import { PageLayout } from '../layouts';
 import { AutoLinkHeader, CSSVariables, PropsTable } from '../components';
-import { slugger, capitalize} from '../helpers';
+import { slugger } from '../helpers';
 import versions from '../versions.json';
 import './mdx.css';
 
@@ -29,16 +29,13 @@ export const MDXTemplate = ({
   toc = [],
   propComponents = [],
   sourceLink,
-  DocComponent = () => null,
   layoutOptions,
-  props = []
+  props = [],
+  pages
 }) => {
   // TODO: Stop hiding TOC in design pages
   const TableOfContents = () => (
     <React.Fragment>
-      <Title size="4xl" headingLevel="h1" className="ws-page-title">
-        {title}
-      </Title>
       {optIn && (
         <Alert
           variant="info"
@@ -178,8 +175,17 @@ export const MDXTemplate = ({
         {...layoutOptions}
       >
         <PageSection id="main-content" className="ws-section">
-          <TableOfContents />
-          <DocComponent />
+          <Title size="4xl" headingLevel="h1" className="ws-page-title">
+            {title}
+          </Title>
+          {pages
+            .map(({ DocComponent, slug }) => DocComponent
+              ? <DocComponent key={slug} />
+              : null)
+            .filter(Boolean)
+          }
+          {/* <TableOfContents /> */}
+          {/* <DocComponent /> */}
           {/* {props.length > 0 && <PropsSection />} */}
           {/* {cssPrefix && <CSSVariablesSection />} */}
           {/* {sourceLink && <FeedbackSection />} */}

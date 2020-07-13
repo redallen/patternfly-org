@@ -125,8 +125,8 @@ export const PageLayout = ({
   hasFooter = false,
   hasSearch = false,
   hasVersionSwitcher = false,
-  sectionedPages,
   sideNavItems,
+  idPages,
   topNavItems = [],
   prnum = null,
   prurl
@@ -157,7 +157,7 @@ export const PageLayout = ({
     <PageSidebar
       className="ws-page-sidebar"
       theme="light"
-      nav={<SideNav location={location} sideNavItems={sideNavItems} sectionedPages={sectionedPages} />}
+      nav={<SideNav location={location} sideNavItems={sideNavItems} idPages={idPages} />}
     />
   );
 

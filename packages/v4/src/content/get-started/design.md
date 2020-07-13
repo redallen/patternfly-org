@@ -1,4 +1,5 @@
 ---
+id: Design
 title: Design with PatternFly
 section: get-started
 ---
