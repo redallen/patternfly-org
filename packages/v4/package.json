@@ -5,19 +5,17 @@
   "author": "Red Hat",
   "license": "MIT",
   "scripts": {
-    "build": "yarn build:static && yarn build:ram",
+    "build": "webpack --mode production",
     "build:prefix": "yarn build:static && yarn build:ram --prefix-paths",
     "build:static": "node ./copyAssets.js",
     "test:a11y": "patternfly-a11y --file .cache/fullscreenPages.json --prefix http://localhost:9000/v4",
-    "start": "webpack-dev-server --mode development"
+    "start": "webpack-dev-server --mode development "
   },
   "dependencies": {
-    "@patternfly/patternfly": "/home/thesm/src/patternfly/dist",
-    "@patternfly/react-docs": "/home/thesm/src/patternfly-react/packages/react-docs",
     "@reach/router": "^1.3.4",
-    "theme-patternfly-org": "^4.2.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "theme-patternfly-org": "^4.2.1",
     "xml-formatter": "^2.1.2"
   },
   "devDependencies": {
@@ -41,6 +39,7 @@
     "html-webpack-plugin": "^4.3.0",
     "js-yaml": "^3.14.0",
     "mini-css-extract-plugin": "^0.9.0",
+    "null-loader": "^4.0.0",
     "react-refresh": "^0.8.3",
     "remark-frontmatter": "^2.0.0",
     "size-plugin": "^2.0.1",

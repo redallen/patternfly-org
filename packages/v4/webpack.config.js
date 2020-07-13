@@ -1,14 +1,16 @@
-const path = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const SizePlugin = require('size-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const SizePlugin = require('size-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
-const pfDir = path.dirname(require.resolve('@patternfly/patternfly/patternfly.css'));
+const pfDir = path.dirname(require.resolve('@patternfly/patternfly/package.json'));
+// Don't include styles twice
+const reactCSSRegex = /(react-[\w-]+\/dist|react-styles\/css)\/.*\.css$/;
 
 module.exports = (_env, argv) => {
   const isDev = argv.mode === 'development'
@@ -24,7 +26,7 @@ module.exports = (_env, argv) => {
       historyApiFallback: true,
     },
     resolve: {
-      extensions: [ '.tsx', '.ts', '.js' ],
+      extensions: [ '.tsx', '.ts', '.js', '.jsx' ],
     },
     module: {
       rules: [
@@ -32,9 +34,9 @@ module.exports = (_env, argv) => {
           test: /\.[tj]sx?$/,
           include: [
             path.resolve(__dirname, 'src'),
-            path.resolve(__dirname, '../theme-patternfly-org')
+            path.resolve(__dirname, '../theme-patternfly-org'),
+            /react-[\w-]+\/src\/.*\/examples/
           ],
-          exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
             options: {
@@ -46,6 +48,7 @@ module.exports = (_env, argv) => {
         },
         {
           test: /\.css$/,
+          exclude: reactCSSRegex,
           use: [
             {
               loader: MiniCssExtractPlugin.loader,
@@ -57,6 +60,10 @@ module.exports = (_env, argv) => {
               loader: 'css-loader',
             }
           ]
+        },
+        {
+          test: reactCSSRegex,
+          use: 'null-loader'
         },
         {
           test: /\.(png|jpg|gif|svg)$/,
@@ -96,8 +103,8 @@ module.exports = (_env, argv) => {
       new CopyPlugin({
         patterns: [
           { from: require.resolve('theme-patternfly-org/versions.json'), to: 'versions.json' },
-          { from: path.join(pfDir, 'assets/images'), to: 'assets/images' },
-          { from: path.join(pfDir, 'assets/fonts'), to: 'assets/fonts' }
+          { from: path.join(pfDir, 'assets/images/'), to: 'assets/images/' },
+          { from: path.join(pfDir, 'assets/fonts/'), to: 'assets/fonts/' }
         ]
       }),
       ...(isDev
@@ -110,7 +117,7 @@ module.exports = (_env, argv) => {
         : [
           new CleanWebpackPlugin(),
           new SizePlugin(),
-          // new BundleAnalyzerPlugin(),
+          new BundleAnalyzerPlugin(),
         ]
       ),
     ],
@@ -125,7 +132,7 @@ module.exports = (_env, argv) => {
           }
         },
       },
-      minimize: false,
+      minimize: isDev ? false : true,
       runtimeChunk: 'single',
     },
     stats: 'minimal',

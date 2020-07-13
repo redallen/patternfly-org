@@ -31,8 +31,7 @@ export const MDXTemplate = ({
   sourceLink,
   DocComponent = () => null,
   layoutOptions,
-  props = [],
-  uri
+  props = []
 }) => {
   // TODO: Stop hiding TOC in design pages
   const TableOfContents = () => (

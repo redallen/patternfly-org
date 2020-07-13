@@ -1,6 +1,9 @@
 const styleToObject = require('style-to-object');
 const camelCaseCSS = require('camelcase-css');
 const { toTemplateLiteral } = require('@mdx-js/util');
+const acorn = require('acorn');
+const jsx = require('acorn-jsx');
+const { capitalize } = require('theme-patternfly-org/helpers/capitalize');
 
 const styledMdTags = [
   'p',
@@ -18,12 +21,13 @@ const styledMdTags = [
   'table',
   'img'
 ];
+const jsxParser = acorn.Parser.extend(jsx());
 
 function toJSX(node, parentNode = {}, options) {
   const { preserveNewlines = false, indent = 2, getRelPath, getPageData } = options;
   const pageData = getPageData();
   let children = '';
-  const exportName = `${pageData.componentName}Docs`;
+  const exportName = pageData.slug.replace(/[\/-](.)?/g, (_, match) => capitalize(match)) + 'Docs';
 
   if (node.type === 'root') {
     const importNodes = [];
@@ -40,20 +44,30 @@ function toJSX(node, parentNode = {}, options) {
 
     const importStatements = importNodes
       .map(childNode => toJSX(childNode, node, options))
-      .map(imp => imp.replace(/(['"])\./, (_, match) => `${match}${getRelPath()}`))
-      .concat([
-        "import React from 'react';",
-        "import { Example, AutoLinkHeader } from 'theme-patternfly-org/components';"
-      ])
+      .map(imp => imp.replace(/(['"])\./g, (_, match) => `${match}${getRelPath()}`))
       .join('\n');
+
+    // https://astexplorer.net/#/gist/9c531dd372dfc57e194c13c2889d31c3/03f2d6e889db1a733c6a079554e8af7784863739
+    const importSpecifiers = jsxParser.parse(importStatements, { sourceType: 'module' }).body
+      .map(node => node.specifiers)
+      .flat(1)
+      .map(spec => spec.local ? spec.local.name : null)
+      .filter(localName => !/srcImport\d+/.test(localName)) // Images in MD like [!img](./src)
+      .filter(Boolean)
+      .join(',\n  ');
 
     const childNodes = jsxNodes
       .map(childNode => toJSX(childNode, node, options))
       .join('');
 
-    return `${importStatements}
+    return `import React from 'react';
+import { Example, AutoLinkHeader } from 'theme-patternfly-org/components';
+${importStatements}
 
 export const ${exportName} = ${JSON.stringify(pageData, null, 2)};
+${exportName}.liveContext = {
+  ${importSpecifiers}
+};
 ${exportName}.DocComponent = function ${exportName}DocComponent() {
   return (
     <React.Fragment>${childNodes.replace(/\n\s*\n/g, '\n')}

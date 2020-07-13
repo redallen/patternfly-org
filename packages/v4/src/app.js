@@ -8,7 +8,15 @@ import * as LayoutOptions from '../patternfly-docs.config.js';
 import '../patternfly-docs.css.js';
 
 const allPages = Object.values(pageIndex);
-LayoutOptions.allPages = allPages;
+LayoutOptions.sectionedPages = allPages.reduce((accum, { section, title, slug }) => {
+  accum[section] = accum[section] || [];
+  accum[section].push({
+    text: title,
+    href: slug
+  });
+
+  return accum;
+}, {});
 
 function App() {
   return (

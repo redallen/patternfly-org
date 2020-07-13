@@ -59,8 +59,8 @@ function toReactComponent(mdFilePath, source) {
         toc = extractTableOfContents(tree);
       }
       const slug = mdFilePath.includes('pages')
-        ? makeSlug('pages', null, componentName)
-        : makeSlug(source, frontmatter.section, componentName);
+        ? makeSlug('pages', null, frontmatter.id || componentName)
+        : makeSlug(source, frontmatter.section, frontmatter.id || componentName);
 
       outPath = path.join(outputBase, `${slug}.js`);
       // const props = propComponents
@@ -78,6 +78,7 @@ function toReactComponent(mdFilePath, source) {
         slug,
         source,
         section: frontmatter.section || 'components',
+        id: frontmatter.id,
         title: frontmatter.title,
         toc,
         componentName
@@ -149,7 +150,26 @@ function parseMD() {
     glob.sync(path.join(coreMDPath, '/**/*.md'), { ignore: path.join(coreMDPath, '/pages/**') }),
     'core'
   );
+
+  // Source react md
+  const reactMDPath = require
+    .resolve('@patternfly/react-core/package.json')
+    .replace('package.json', 'src');
   
+  sourceMD(
+    glob.sync(path.join(reactMDPath, '/**/*.md')),
+    'react'
+  );
+
+  const reactTableMDPath = require
+    .resolve('@patternfly/react-table/package.json')
+    .replace('package.json', 'src');
+  
+  sourceMD(
+    glob.sync(path.join(reactTableMDPath, '/**/*.md')),
+    'react'
+  );
+
   const indexContent = index.map(file => `export * from './${file}';`).join('\n');
   fs.outputFileSync(path.join(outputBase, 'index.js'), indexContent);
 }

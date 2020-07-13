@@ -25,48 +25,36 @@ const renderNavItem = ({ text, href }) => {
 
 export const SideNav = ({
   location,
-  sideNav,
-  allPages
-}) => {
-  const allNavItems = allPages.reduce((accum, { section, title, slug }) => {
-    accum[section] = accum[section] || [];
-    accum[section].push({
-      text: title,
-      href: slug
-    });
-
-    return accum;
-  }, {});
-
-  return (
-    <React.Fragment>
-      <Nav aria-label="Side Nav" theme="light">
-        <NavList className="ws-side-nav-list">
-          {sideNav.map(({ section, text, href }) => {
-            if (!section) {
-              // Single nav item
-              return renderNavItem({
-                text: text || capitalize(href.replace(/\//g, '').replace(/-/g, ' ')),
-                href
-              });
-            }
-            else if (section && allNavItems[section]) {
-              const isActive = location.pathname.includes(`/${slugger(section)}/`);
-              return (
-                <NavExpandable
-                  key={section}
-                  title={capitalize(section.replace(/-/g, ' '))}
-                  isActive={isActive}
-                  isExpanded={isActive}
-                  className="ws-side-nav-group"
-                >
-                  {allNavItems[section].map(renderNavItem)}
-                </NavExpandable>
-              );
-            }
-          })}
-        </NavList>
-      </Nav>
-    </React.Fragment>
-  );
-}
+  sideNavItems, // From patternfly-docs.config.js
+  sectionedPages
+}) => (
+  <Nav aria-label="Side Nav" theme="light">
+    <NavList className="ws-side-nav-list">
+      {sideNavItems.map(({ section, text, href }) => {
+        if (!section) {
+          // Single nav item
+          return renderNavItem({
+            text: text || capitalize(href.replace(/\//g, '').replace(/-/g, ' ')),
+            href
+          });
+        }
+        else if (section && sectionedPages[section]) {
+          const isActive = location.pathname.includes(`/${slugger(section)}/`);
+          return (
+            <NavExpandable
+              key={section}
+              title={capitalize(section.replace(/-/g, ' '))}
+              isActive={isActive}
+              isExpanded={isActive}
+              className="ws-side-nav-group"
+            >
+              {sectionedPages[section]
+                .sort((a, b) => a.text.localeCompare(b.text))
+                .map(renderNavItem)}
+            </NavExpandable>
+          );
+        }
+      })}
+    </NavList>
+  </Nav>
+);

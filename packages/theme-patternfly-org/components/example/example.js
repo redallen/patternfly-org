@@ -1,6 +1,8 @@
 import React, { useLayoutEffect } from 'react';
 import { LiveProvider, LiveEditor, LivePreview, LiveError } from 'react-live';
 import { Badge } from '@patternfly/react-core';
+import * as reactCoreModule from '@patternfly/react-core';
+import * as reactTableModule from '@patternfly/react-table';
 import { css } from '@patternfly/react-styles';
 import { ExampleToolbar } from './exampleToolbar';
 import { AutoLinkHeader } from '../autoLinkHeader/autoLinkHeader';
@@ -31,7 +33,8 @@ export const Example = ({
   isBeta,
   componentName,
   section,
-  children
+  children,
+  liveContext
 }) => {
   const supportedLangs = getSupportedLanguages(lang);
   const initialLang = supportedLangs[0];
@@ -53,8 +56,13 @@ export const Example = ({
     return <pre dangerouslySetInnerHTML={{ __html: html }} />;
   }
   const exampleName = title.replace(/-/g, ' ').replace(/  /g, '-');
-  const fullscreenLink = `${window.location.pathname}/${slugger(title.toLowerCase())}`;
-  const scope = {};
+  const fullscreenLink = `${window.location.pathname}/${slugger(title)}`;
+  const scope = {
+    ...liveContext,
+    // These 2 are in the bundle anyways for the site since we dogfood
+    ...reactCoreModule,
+    ...reactTableModule,
+  };
   const codeBoxParams = getParameters(
     lang === 'html'
     ? getStaticParams(title, code)

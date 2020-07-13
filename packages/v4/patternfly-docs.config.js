@@ -3,7 +3,7 @@ module.exports = {
   hasFooter: true,
   hasSearch: true,
   hasVersionSwitcher: true,
-  sideNav: [
+  sideNavItems: [
     { section: 'get-started' },
     { section: 'styles' },
     { section: 'content' },

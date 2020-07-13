@@ -29,6 +29,9 @@
     ]
   },
   "devDependencies": {
+    "@patternfly/patternfly": "/home/thesm/src/patternfly/dist",
+    "@patternfly/react-core": "/home/thesm/src/patternfly-react/packages/react-core",
+    "@patternfly/react-table": "/home/thesm/src/patternfly-react/packages/react-table",
     "glob": "^7.1.6",
     "lerna": "^3.19.0",
     "surge": "^0.21.3"

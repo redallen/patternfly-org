@@ -4,7 +4,6 @@ const detab = require('detab');
 const acorn = require('acorn');
 const jsx = require('acorn-jsx');
 const all = require('mdast-util-to-hast/lib/all');
-const himage = require('mdast-util-to-hast/lib/handlers/image');
 
 let srcCounter = 0;
 
@@ -42,10 +41,10 @@ function mdxAstToMdxHast() {
         if (node.meta) {
           try {
             const jsxAttributes = jsxParser.parse(`<Component ${node.meta} />`)
-            .body[0]
-            .expression
-            .openingElement
-            .attributes;
+              .body[0]
+              .expression
+              .openingElement
+              .attributes;
 
             jsxAttributes.forEach(attr => {
               properties[attr.name.name] = attr.value ? attr.value.value : true;
