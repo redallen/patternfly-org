@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@reach/router';
+import { Link } from 'theme-patternfly-org/components';
 import { PageLayout } from 'theme-patternfly-org/layouts';
 import {
   Flex,

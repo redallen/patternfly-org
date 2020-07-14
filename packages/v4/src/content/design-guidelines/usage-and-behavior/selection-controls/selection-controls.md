@@ -1,6 +1,6 @@
 ---
-id: Selection controls
-section: usage and behavior
+id: Select
+section: components
 ---
 
 Selection controls allow the user to provide information by selecting from a known set of options or a constrained format/value range.

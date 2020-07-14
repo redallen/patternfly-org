@@ -5,7 +5,6 @@ section: get-started
 ---
 import './get-started.css';
 
-
 Before you begin, check out our [overview of PatternFly](/get-started/about) to get acquainted with the basic elements of the design system.
 
 **Before you begin, install a package manager:**
@@ -47,14 +46,14 @@ The React library provides a collection of React components you can use to build
 
 ### Install and configure PatternFly React
 * Using npm, run the following command to install:
-  ```
+  ```bash noLive
   npm install @patternfly/react-core --save
   ```
 
   **OR**
 
 * Using yarn, run the following command to install:
-  ```
+  ```bash noLive
   yarn add @patternfly/react-core
   ```
 
@@ -69,7 +68,7 @@ The HTML/CSS library provides a collection of code samples you can use to build 
 
 ### Install
 Using npm, run the following commands to install:
-```
+```bash noLive
 npm install @patternfly/patternfly --save
 ```
 
@@ -81,21 +80,21 @@ If you need to overwrite any elements, we recommend extending the variables foun
 
 When you install PatternFly, the package includes:
 
-  * A single file for the entire compiled library: ```node_modules/@patternfly/patternfly/patternfly.css```
-  * Individual files with each component compiled separately: ```node_modules/@patternfly/patternfly/<ComponentName>/styles.css```
-  * A single file for the entire library's source (Sass): ```node_modules/@patternfly/patternfly/patternfly.scss```
-  * Individual files for each component's source (Sass): ```node_modules/@patternfly/patternfly/<ComponentName>/styles.scss```
+  * A single file for the entire compiled library: `node_modules/@patternfly/patternfly/patternfly.css`
+  * Individual files with each component compiled separately: `node_modules/@patternfly/patternfly/<ComponentName>/styles.css`
+  * A single file for the entire library's source (Sass): `node_modules/@patternfly/patternfly/patternfly.scss`
+  * Individual files for each component's source (Sass): `node_modules/@patternfly/patternfly/<ComponentName>/styles.scss`
 
 Use these files to consume the library. The recommended consumption approach will vary from project to project.
 
 ### Configure your project
-1. Navigate to the patternfly-next package you just installed and find the PatternFly CSS stylesheet, ```patternfly.css```
+1. Navigate to the patternfly-next package you just installed and find the PatternFly CSS stylesheet, `patternfly.css`
 
-2. Copy ```patternfly.css``` to your project's CSS directory.
+2. Copy `patternfly.css` to your project's CSS directory.
 
 3. In your HTML file, add the following line to the bottom of your list of CSS files to link to your new stylesheet:
 
-  ```
+  ```html noLive
   <link rel="stylesheet" href="css/patternfly.css">
   ```
 
@@ -107,7 +106,7 @@ Use these files to consume the library. The recommended consumption approach wil
 
 6. In your HTML file, add the following line to the bottom of your list of CSS files:
 
-  ```
+  ```html noLive
   <link rel="stylesheet" href="css/patternfly-addons.css">
   ```
 
@@ -126,7 +125,7 @@ PatternFly uses the Overpass font family. Overpass can be utilized in two differ
 
   To use the CDN vs the standard build, update the ```sass-utilities/scss-variables.scss``` file as follows:
 
-  ```
+  ```css noLive
   $pf-global--enable-font-overpass-cdn: true !default;
   ```
 
@@ -144,11 +143,11 @@ PatternFly uses Font Awesome 5. Font Awesome 5 can be utilized in two different 
 
   To use the CDN vs the standard build, update the ```sass-utilities/scss-variables.scss``` file as follows:
 
-  ```
+  ```css noLive
   $pf-global--enable-fontawesome-cdn: true !default;
   ```
 
 ### Customizing PatternFly for your project
 The CSS variable system enables you to easily customize things like color or shape without overwriting existing PatternFly styles.
 
-[**Learn more and view CSS variables**](/documentation/overview/global-css-variables) <i class="ws-content-blueArrow fas fa-arrow-right pf-u-mx-sm"></i>
+[**Learn more and view CSS variables**](/documentation/overview/global-css-variables) <i className="ws-content-blueArrow fas fa-arrow-right pf-u-mx-sm"></i>

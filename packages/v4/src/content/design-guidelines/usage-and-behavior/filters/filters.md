@@ -1,12 +1,12 @@
 ---
 id: Filters
-section: usage and behavior
+section: usage-and-behavior
 ---
 
 ## About
 PatternFly provides a number of common filters that can be used in a various combinations to create a custom filtering experience. These elements may be used in a toolbar or alone. You can use the decision tree below to help determine which filter best fits your use case.
 
-![image1](./img/decision-tree.png)
+![Decision tree](./img/decision-tree.png)
 
 
 

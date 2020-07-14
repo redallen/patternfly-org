@@ -6,40 +6,17 @@ const remove = require('unist-util-remove');
 const toVfile = require('to-vfile'); // https://github.com/vfile/vfile
 const vfileReport = require('vfile-reporter');
 const yaml = require('js-yaml'); // https://github.com/nodeca/js-yaml
-const { slugger } = require('theme-patternfly-org/helpers/slugger');
+const { makeSlug } = require('theme-patternfly-org/helpers/makeSlug');
 const { extractTableOfContents } = require('theme-patternfly-org/helpers/extractTableOfContents');
 // var mdx = require('@mdx-js/mdx')
 
 const outputBase = path.join(__dirname, `../src/generated`);
-
-const makeSlug = (source, section, id) => {
-  let url = '';
-
-  if (['react', 'core',].includes(source)) {
-    url += `/documentation/${source}`;
-  }
-  else if (source === 'shared') {
-    url += '/documentation';
-  }
-  else if (!source.includes('pages-')) {
-    url += `/${source}`;
-  }
-
-  if (section) {
-    url += `/${slugger(section)}`
-  }
-
-  url += `/${slugger(id)}`;
-
-  return url;
-}
 
 function toReactComponent(mdFilePath, source) {
   // vfiles allow for nicer error messages and have native `unified` support
   const vfile = toVfile.readSync(mdFilePath);
 
   const relPath = path.relative(process.cwd(), vfile.path);
-  console.log(relPath);
 
   let outPath;
   let pageData = {};
@@ -62,11 +39,18 @@ function toReactComponent(mdFilePath, source) {
       if (!frontmatter.hideTOC) {
         toc = extractTableOfContents(tree);
       }
-      const slug = mdFilePath.includes('pages')
-        ? makeSlug('pages', null, frontmatter.id)
-        : makeSlug(source, frontmatter.section, frontmatter.id);
-
+      const slug = makeSlug(source, frontmatter.section, frontmatter.id);
       outPath = path.join(outputBase, `${slug}.js`);
+      console.log(relPath, '->', path.relative(process.cwd(), outPath));
+
+      let sourceRepo = 'patternfly-org';
+      if (source === 'core') {
+        sourceRepo = 'patternfly';
+      }
+      else if (source === 'react') {
+        sourceRepo = 'patternfly-react';
+      }
+
       // const props = propComponents
       //   .filter(name => name !== '') // Filter default entry we make for GraphQL schema
       //   .map(name => {
@@ -81,10 +65,17 @@ function toReactComponent(mdFilePath, source) {
       pageData = {
         slug,
         source,
+        propComponents: frontmatter.propComponents,
+        sourceLink: `https://github.com/patternfly/${sourceRepo}/blob/master/${relPath
+          .replace('node_modules/@patternfly/patternfly/docs', 'src/patternfly')
+          .replace(/node_modules\/@patternfly\/react-([\w-])/, (_, match) => `packages/react-${match}`)
+          .replace(/\.\.\//g, '')
+        }`,
         section: frontmatter.section || 'components',
         id: frontmatter.id,
         title: frontmatter.title || frontmatter.id,
-        toc
+        toc,
+        cssPrefix: frontmatter.cssPrefix
       };
     })
     // Not entirely sure what this does, but needed for mdx-ast-to-mdx-hast
@@ -116,8 +107,7 @@ function toReactComponent(mdFilePath, source) {
 
   return {
     jsx,
-    outPath,
-    pageData
+    outPath
   };
 }
 
@@ -126,7 +116,7 @@ function parseMD() {
   
   function sourceMD(files, source) {
     files.forEach(file => {
-      const { jsx, outPath, pageData } = toReactComponent(file, source);
+      const { jsx, outPath } = toReactComponent(file, source);
   
       fs.outputFileSync(outPath, jsx);
       index.push(path.relative(outputBase, outPath));
@@ -148,6 +138,11 @@ function parseMD() {
     glob.sync(path.join(__dirname, '../src/content/design-snippets/**/*.md')),
     'design-snippets'
   );
+
+  sourceMD(
+    glob.sync(path.join(__dirname, '../src/content/design-guidelines/usage-and-behavior/**/*.md')),
+    'usage-and-behavior'
+  );
   
   // Source core md
   const coreMDPath = require
@@ -163,7 +158,7 @@ function parseMD() {
   const reactMDPath = require
     .resolve('@patternfly/react-core/package.json')
     .replace('package.json', 'src');
-  
+
   sourceMD(
     glob.sync(path.join(reactMDPath, '/**/*.md')),
     'react'

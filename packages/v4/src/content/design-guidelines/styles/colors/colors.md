@@ -3,7 +3,6 @@ id: Colors
 section: styles
 ---
 import { Alert, Grid, GridItem, Divider } from '@patternfly/react-core';
-import { Link } from '@reach/router';
 import { ColorSwatch } from './ColorSwatch';
 import { ColorFamily } from './ColorFamily';
 import './colors.css';

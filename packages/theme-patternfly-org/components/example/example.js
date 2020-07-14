@@ -25,7 +25,7 @@ const getSupportedLanguages = lang => {
 // Props come from mdx-ast-to-mdx-hast.js
 export const Example = ({
   code,
-  lang,
+  lang = '',
   source = 'core',
   noLive,
   title = 'Untitled',
@@ -37,6 +37,9 @@ export const Example = ({
   liveContext
 }) => {
   const supportedLangs = getSupportedLanguages(lang);
+  if (supportedLangs === []) {
+    noLive = true;
+  }
   const initialLang = supportedLangs[0];
   const initialCode = code;
 

@@ -1,17 +1,35 @@
 const path = require('path');
 const toHAST = require('mdast-util-to-hast');
 const detab = require('detab');
-const acorn = require('acorn');
-const jsx = require('acorn-jsx');
+const normalize = require('mdurl/encode');
 const all = require('mdast-util-to-hast/lib/all');
+const { parseJSXAttributes } = require('./jsxAttributes');
 
 let srcCounter = 0;
 
 function mdxAstToMdxHast() {
-  const jsxParser = acorn.Parser.extend(jsx());
   
   return (tree, file) => {
     const srcImports = [];
+
+    function imageHandler(h, node) {
+      const srcImport = `srcImport${srcCounter++}`;
+      const props = {
+        src: srcImport,
+        alt: node.alt
+      };
+      if (node.title !== null && node.title !== undefined) {
+        props.title = node.title
+      }
+      // Add import statement
+      srcImports.push({
+        type: 'import',
+        value: `import ${srcImport} from '${node.url.replace(/'/g, "\\'")}';`
+      });
+    
+      return h(node, 'img', props);
+    }
+
     const handlers = {
       // `inlineCode` gets passed as `code` by the HAST transform.
       // This makes sure it ends up being `inlineCode`
@@ -40,15 +58,10 @@ function mdxAstToMdxHast() {
 
         if (node.meta) {
           try {
-            const jsxAttributes = jsxParser.parse(`<Component ${node.meta} />`)
-              .body[0]
-              .expression
-              .openingElement
-              .attributes;
-
-            jsxAttributes.forEach(attr => {
-              properties[attr.name.name] = attr.value ? attr.value.value : true;
-            }); 
+            Object.entries(parseJSXAttributes(`<Component ${node.meta} />`))
+              .forEach(([key, val]) => {
+                properties[key] = val;
+              }); 
           }
           catch(error) {
             const relPath = path.relative(process.cwd(), file.path);
@@ -78,26 +91,49 @@ function mdxAstToMdxHast() {
         });
       },
       jsx(h, node) {
+        // remark-mdx makes <img> tags JSX
+        if (/<img/.test(node.value)) {
+          Object.entries(parseJSXAttributes(node.value))
+            .forEach(([key, val]) => {
+              node[key] = val;
+            });
+          node.url = node.src;
+          if (typeof node.url === 'string') {
+            // Should have used JSX import but someone is expecting
+            // a string to act like the md ![Alt](url "title") syntax
+            return imageHandler(h, node);
+          }
+        }
+        // BUT remark-mdx DOES NOT make <a> tags JSX so we don't have to worry about that here
+
         return Object.assign({}, node, {
           type: 'jsx'
         });
       },
       image(h, node) {
-        const srcImport = `srcImport${srcCounter++}`;
-        const props = {
-          src: srcImport,
-          alt: node.alt
-        };
+        return imageHandler(h, node);
+      },
+      link(h, node) {
+        const href = normalize(node.href || node.url);
+
+        const properties = {};
         if (node.title !== null && node.title !== undefined) {
-          props.title = node.title
+          properties.title = node.title;
         }
-        // Add import statement
-        srcImports.push({
-          type: 'import',
-          value: `import ${srcImport} from '${node.url}';`
-        });
-      
-        return h(node, 'img', props);
+  
+        if (href && href.startsWith('/')) {
+          properties.to = href;
+          
+          return Object.assign({}, node, {
+            type: 'element',
+            tagName: 'PatternflyThemeLink',
+            properties,
+            children: all(h, node)
+          });
+        }
+  
+        properties.href = href;
+        return h(node, 'a', properties, all(h, node));
       }
     };
 

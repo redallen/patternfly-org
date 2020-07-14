@@ -8,12 +8,11 @@ import {
   SortByDirection,
   expandable
 } from "@patternfly/react-table";
-// import * as tokensModule from "@patternfly/react-tokens/dist/js";
+import * as tokensModule from "@patternfly/react-tokens/dist/js";
 import global_spacer_md from "@patternfly/react-tokens/dist/js/global_spacer_md";
 import LevelUpAltIcon from "@patternfly/react-icons/dist/js/icons/level-up-alt-icon";
 import { CSSSearch } from './cssSearch';
 
-const tokensModule = {};
 import "./cssVariables.css";
 
 const isColorRegex = /^(#|rgb)/;

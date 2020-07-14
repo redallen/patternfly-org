@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@reach/router';
+import { Link } from 'theme-patternfly-org/components';
 
 const recommendationsArray = [
   [

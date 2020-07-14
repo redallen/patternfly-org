@@ -25,7 +25,7 @@ const jsxParser = acorn.Parser.extend(jsx());
 
 function toJSX(node, parentNode = {}, options) {
   const { preserveNewlines = false, indent = 3, getRelPath, getPageData } = options;
-  const pageData = getPageData();
+  const pageData = {...getPageData()};
   let children = '';
   const exportName = pageData.slug.replace(/[\/-](.)?/g, (_, match) => capitalize(match)) + 'Docs';
 
@@ -61,7 +61,7 @@ function toJSX(node, parentNode = {}, options) {
       .join('');
 
     return `import React from 'react';
-import { Example, AutoLinkHeader } from 'theme-patternfly-org/components';
+import { AutoLinkHeader, Example, Link as PatternflyThemeLink } from 'theme-patternfly-org/components';
 ${importStatements}
 
 export const ${exportName} = ${JSON.stringify(pageData, null, 2)};

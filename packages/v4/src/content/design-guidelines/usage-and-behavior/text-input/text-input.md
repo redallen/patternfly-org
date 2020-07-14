@@ -1,6 +1,6 @@
 ---
 id: Text input
-section: usage and behavior
+section: components
 ---
 
 Use text input to gather free-form text from a user.

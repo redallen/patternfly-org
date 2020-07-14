@@ -1,5 +1,5 @@
 ---
-id: migrate
+id: Migrate
 title: Migration guide
 section: get-started
 ---

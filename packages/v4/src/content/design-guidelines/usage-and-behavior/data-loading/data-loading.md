@@ -1,6 +1,6 @@
 ---
-id: Data loading
-section: usage and behavior
+id: Spinner
+section: components
 ---
 
 Data loading patterns are used to inform users that objects are loading on the screen even though they have yet to appear. A component that we use to demonstrate data loading is a spinner.
