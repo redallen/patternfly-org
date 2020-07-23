@@ -19,6 +19,7 @@
   "devDependencies": {
     "@patternfly/patternfly-a11y": "^0.0.17",
     "eslint-config-react-app": "^5.0.2",
-    "fs-extra": "^9.0.0"
+    "fs-extra": "^9.0.0",
+    "glob": "^7.1.6"
   }
 }

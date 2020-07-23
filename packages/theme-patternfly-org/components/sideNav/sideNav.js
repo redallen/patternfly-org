@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from '../link/link';
-import { Nav, NavList, NavExpandable } from '@patternfly/react-core';
+import { Nav, NavList, NavExpandable, capitalize } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
-import { slugger, capitalize } from '../../helpers';
+import { slugger } from '../../helpers';
 import './sideNav.css';
 
 const renderNavItem = ({ text, href }) => {
