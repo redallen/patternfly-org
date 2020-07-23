@@ -4,7 +4,7 @@ import { ChatIcon, QuestionIcon, CatalogIcon, MailBulkIcon } from '@patternfly/r
 import { Grid, GridItem, PageSection, PageSectionVariants, Split, SplitItem, Title } from '@patternfly/react-core';
 import "./get-in-touch.css";
 
-export default ({ location, layoutOptions }) => {
+const GetInTouchPage = ({ location, layoutOptions }) => {
   return (
   <SideNavLayout location={location} {...layoutOptions}>
     <PageSection
@@ -58,3 +58,5 @@ export default ({ location, layoutOptions }) => {
     </PageSection>
   </SideNavLayout>
 )};
+
+export default GetInTouchPage;
