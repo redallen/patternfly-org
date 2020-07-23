@@ -8,7 +8,7 @@ const yaml = require('js-yaml'); // https://github.com/nodeca/js-yaml
 const { makeSlug } = require('../../helpers/makeSlug');
 const { extractTableOfContents } = require('../../helpers/extractTableOfContents');
 
-const outputBase = path.join(process.cwd(), `../src/generated`);
+const outputBase = path.join(process.cwd(), `src/generated`);
 
 function toReactComponent(mdFilePath, source) {
   // vfiles allow for nicer error messages and have native `unified` support
@@ -16,22 +16,23 @@ function toReactComponent(mdFilePath, source) {
 
   const relPath = path.relative(process.cwd(), vfile.path);
 
+  let jsx;
   let outPath;
   let pageData = {};
   let frontmatter = {};
   let toc = [];
 
-  const jsx = unified()
+  unified()
     .use(require('remark-parse'))
     .use(require('remark-frontmatter'), ['yaml'])
     // Extract frontmatter
-    .use(() => tree => {
+    .use(() => (tree, file) => {
       const yamlNode = tree.children.shift();
       frontmatter = yaml.safeLoad(yamlNode.value);
 
       // Fail early
       if (!frontmatter.id) {
-        throw new Error('id attribute is required in frontmatter for PatternFly docs');
+        file.fail('id attribute is required in frontmatter for PatternFly docs');
       }
       // Create TOC and pageData
       if (!frontmatter.hideTOC) {
@@ -39,7 +40,6 @@ function toReactComponent(mdFilePath, source) {
       }
       const slug = makeSlug(source, frontmatter.section, frontmatter.id);
       outPath = path.join(outputBase, `${slug}.js`);
-      console.log(relPath, '->', path.relative(process.cwd(), outPath));
 
       let sourceRepo = 'patternfly-org';
       if (source === 'core') {
@@ -98,28 +98,38 @@ function toReactComponent(mdFilePath, source) {
       getPageData: () => pageData // For @reach/router routing
     })
     // .use(require('@mdx-js/mdx/mdx-hast-to-jsx'))
-    .processSync(vfile, function(err, file) {
-      console.log('errorz');
-      console.error(vfileReport(err || file))
+    .process(vfile, (err, file) => {
+      if (err) {
+        console.error(vfileReport(err || file));
+        process.exit(2);
+      } else {
+        // console.log(relPath, '->', path.relative(process.cwd(), outPath));
+        jsx = file.contents;
+      }
     });
 
   return {
     jsx,
+    pageData,
     outPath
   };
 }
 
 const index = [];
+const routes = [];
 
 module.exports = {
   sourceMD(files, source) {
     files.forEach(file => {
-      const { jsx, outPath } = toReactComponent(file, source);
+      const { jsx, pageData, outPath } = toReactComponent(file, source);
   
-      fs.outputFileSync(outPath, jsx);
-      index.push(path.relative(outputBase, outPath));
+      if (jsx) {
+        fs.outputFileSync(outPath, jsx);
+        index.push(path.relative(outputBase, outPath));
+      }
     });
-
+  },
+  writeIndex() {
     const indexContent = index.map(file => `export * from './${file}';`).join('\n');
     fs.outputFileSync(path.join(outputBase, 'index.js'), indexContent);
   }

@@ -29,7 +29,7 @@ const coreMDPath = require
   .replace('package.json', 'docs');
 
 sourceMD(
-  glob.sync(path.join(coreMDPath, '/**/*.md'), { ignore: path.join(coreMDPath, '/pages/**') }),
+  glob.sync(path.join(coreMDPath, '/**/examples/*.md'), { ignore: path.join(coreMDPath, '/pages/**') }),
   'core'
 );
 
@@ -39,7 +39,7 @@ const reactMDPath = require
   .replace('package.json', 'src');
 
 sourceMD(
-  glob.sync(path.join(reactMDPath, '/**/*.md')),
+  glob.sync(path.join(reactMDPath, '/**/examples/*.md')),
   'react'
 );
 
@@ -48,7 +48,7 @@ const reactTableMDPath = require
   .replace('package.json', 'src');
 
 sourceMD(
-  glob.sync(path.join(reactTableMDPath, '/**/*.md')),
+  glob.sync(path.join(reactTableMDPath, '/**/examples/*.md')),
   'react'
 );
 

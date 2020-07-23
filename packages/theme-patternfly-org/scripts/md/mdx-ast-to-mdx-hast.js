@@ -64,8 +64,7 @@ function mdxAstToMdxHast() {
               }); 
           }
           catch(error) {
-            const relPath = path.relative(process.cwd(), file.path);
-            throw new Error(`Error parsing "${node.meta}" in file ${relPath}:\n${error}`);
+            file.fail(`Error parsing "${node.meta}": ${error}`);
           }
         }
         return Object.assign({}, node, {
@@ -93,10 +92,15 @@ function mdxAstToMdxHast() {
       jsx(h, node) {
         // remark-mdx makes <img> tags JSX
         if (/<img/.test(node.value)) {
-          Object.entries(parseJSXAttributes(node.value))
-            .forEach(([key, val]) => {
-              node[key] = val;
-            });
+          try {
+            Object.entries(parseJSXAttributes(node.value))
+              .forEach(([key, val]) => {
+                node[key] = val;
+              });
+          }
+          catch(error) {
+            file.fail(`Error parsing "${node.value}": ${error}`);
+          }
           node.url = node.src;
           if (typeof node.url === 'string') {
             // Should have used JSX import but someone is expecting
