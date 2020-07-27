@@ -3,6 +3,8 @@ id: Numerics
 section: content
 ---
 
+import './content.css';
+
 ## Date and time
 If you can, let users customize how their date and time format is displayed in the interface.  
 
@@ -50,7 +52,7 @@ Using **absolute** or **relative** timestamps will depend on the context. If you
 
 If users are interested in how long ago an event occurred, use a relative timestamp. When reporting relative time, follow these examples:
 
-<table style="table-layout: fixed" tr width="80%">
+<table class="ws-table-content">
     <tr>
         <th><center><strong>Time frame</strong></center></th>
         <th><center><strong>Usage</strong></center></th>
@@ -93,7 +95,7 @@ If users are interested in how long ago an event occurred, use a relative timest
 ## Numbers and currency
 In a UI, use numerals instead of written numbers. 
 
-<table style="table-layout: fixed" tr width="80%">
+<table class="ws-table-content">
     <tr>
         <th><center><strong>Before</strong></center></th>
         <th><center><strong>After</strong></center></th>

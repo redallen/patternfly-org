@@ -3,13 +3,15 @@ id: Punctuation
 section: content
 ---
 
+import './content.css';
+
 ## Ampersand
 Avoid using ampersands, and use "and" instead.
 
 ## Referring to text in the UI
 Use bold text (not quotation marks) when referring to an element or text in the UI.
 
-<table style="table-layout: fixed" tr width="80%">
+<table class="ws-table-content">
     <tr>
         <th><center><strong>Before</strong></center></th>
         <th><center><strong>After</strong></center></th>
@@ -32,7 +34,7 @@ Examples:
 ## Ellipses (...)
 Ellipses (...) are commonly used when information is omitted. You might use ellipses when you cannot fit all words onto a line or when you remove less relevant information (like in a quote).
 
-<table style="table-layout: fixed" tr width="80%">
+<table class="ws-table-content">
     <tr>
         <th><center><strong>Before ellipses</strong></center></th>
         <th><center><strong>After ellipses</strong></center></th>
@@ -75,7 +77,7 @@ Use exclamation marks sparingly. Don’t use one to generate excitement; only us
 
 To more accurately capture human expression, use an exclamation mark after just a few words, not after a long sentence.
 
-<table style="table-layout: fixed" tr width="80%">
+<table class="ws-table-content">
     <tr>
         <th><center><strong>Before</strong></center></th>
         <th><center><strong>After</strong></center></th>
@@ -90,7 +92,7 @@ To more accurately capture human expression, use an exclamation mark after just 
 ## Parallel structure
 All items in a list or series should be of the same part of speech.
 
-<table style="table-layout: fixed" tr width="80%">
+<table class="ws-table-content">
     <tr>
         <th><center><strong>Before</strong></center></th>
         <th><center><strong>After</strong></center></th>
