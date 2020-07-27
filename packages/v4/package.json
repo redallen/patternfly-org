@@ -5,6 +5,7 @@
   "author": "Red Hat",
   "license": "MIT",
   "scripts": {
+    "generate": "node scripts/sourceMD",
     "build": "webpack --config webpack.server.config.js --mode production && webpack --mode production",
     "clean": "rm -rf .cache public size-plugin.json",
     "develop": "webpack-dev-server --mode development",

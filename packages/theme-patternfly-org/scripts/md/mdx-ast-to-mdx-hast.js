@@ -1,9 +1,10 @@
-const path = require('path');
 const toHAST = require('mdast-util-to-hast');
 const detab = require('detab');
 const normalize = require('mdurl/encode');
 const all = require('mdast-util-to-hast/lib/all');
 const { parseJSXAttributes } = require('./jsxAttributes');
+const styleToObject = require('style-to-object');
+const camelCaseCSS = require('camelcase-css');
 
 let srcCounter = 0;
 
@@ -13,21 +14,52 @@ function mdxAstToMdxHast() {
     const srcImports = [];
 
     function imageHandler(h, node) {
+      const { src, ...rest } = node.props || {};
       const srcImport = `srcImport${srcCounter++}`;
       const props = {
         src: srcImport,
-        alt: node.alt
+        alt: node.alt,
+        title: node.title,
+        ...rest
       };
-      if (node.title !== null && node.title !== undefined) {
-        props.title = node.title
-      }
       // Add import statement
       srcImports.push({
         type: 'import',
-        value: `import ${srcImport} from '${node.url.replace(/'/g, "\\'")}';`
+        value: `import ${srcImport} from '${(node.url || src).replace(/'/g, "\\'")}';`
       });
     
       return h(node, 'img', props);
+    }
+
+    function mdxExpression(h, node) {
+      // Treat JSX <img> tags like commonmark ![]() image tags
+      if (node.name === 'img') {
+        node.props = node.attributes.reduce((acc, attr) => {
+          acc[attr.name] = attr.value;
+          return acc;
+        }, {});
+        if (typeof node.props.src === 'string') {
+          return imageHandler(h, node);
+        }
+      }
+      node.attributes.forEach(attr => {
+        // style="backgroundcolor: black" -> style={{backgroundColor: "black"}}
+        if (attr.name === 'style' && typeof attr.value === 'string') {
+          const styleObject = {};
+          styleToObject(attr.value, (name, value) => styleObject[camelCaseCSS(name)] = value);
+          attr.value = {
+            type: 'mdxValueExpression',
+            value: JSON.stringify(styleObject)
+          };
+        }
+    
+        // class="my-class" -> className="my-class"
+        if (attr.name === 'class') {
+          attr.name = 'className';
+        }
+      });
+
+      return Object.assign({}, node, {children: all(h, node)});
     }
 
     const handlers = {
@@ -89,31 +121,6 @@ function mdxAstToMdxHast() {
           type: 'comment'
         });
       },
-      jsx(h, node) {
-        // remark-mdx makes <img> tags JSX
-        if (/<img/.test(node.value)) {
-          try {
-            Object.entries(parseJSXAttributes(node.value))
-              .forEach(([key, val]) => {
-                node[key] = val;
-              });
-          }
-          catch(error) {
-            file.fail(`Error parsing "${node.value}": ${error}`);
-          }
-          node.url = node.src;
-          if (typeof node.url === 'string') {
-            // Should have used JSX import but someone is expecting
-            // a string to act like the md ![Alt](url "title") syntax
-            return imageHandler(h, node);
-          }
-        }
-        // BUT remark-mdx DOES NOT make <a> tags JSX so we don't have to worry about that here
-
-        return Object.assign({}, node, {
-          type: 'jsx'
-        });
-      },
       image(h, node) {
         return imageHandler(h, node);
       },
@@ -138,14 +145,26 @@ function mdxAstToMdxHast() {
   
         properties.href = href;
         return h(node, 'a', properties, all(h, node));
+      },
+      mdxBlockElement(h, node) {
+        return mdxExpression(h, node);
+      },
+      mdxSpanElement(h, node) {
+        return mdxExpression(h, node);
+      },
+      mdxBlockExpression(h, node) {
+        return Object.assign({}, node, {
+          type: 'mdxBlockExpression'
+        });
+      },
+      mdxSpanExpression(h, node) {
+        return Object.assign({}, node, {
+          type: 'mdxSpanExpression'
+        });
       }
     };
 
-    const hast = toHAST(tree, {
-      handlers,
-      // Enable passing of HTML nodes to HAST as raw nodes
-      allowDangerousHtml: true
-    });
+    const hast = toHAST(tree, { handlers });
 
     hast.children.unshift(...srcImports);
 

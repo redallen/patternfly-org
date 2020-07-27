@@ -76,7 +76,11 @@ function toReactComponent(mdFilePath, source) {
         cssPrefix: frontmatter.cssPrefix
       };
     })
-    // Not entirely sure what this does, but needed for mdx-ast-to-mdx-hast
+    // Delete HTML comments
+    .use(require('./remove-comments'))
+    // remark-mdx removes auto-link support
+    // this adds it back ONLY for links which are easily differentiable from JSX 
+    .use(require('./auto-link-url'))
     .use(require('remark-mdx'))
     // Insert footnotes
     .use(require('remark-footnotes'))
@@ -86,18 +90,20 @@ function toReactComponent(mdFilePath, source) {
     .use(require('./example-captions'))
     // .use(require('remark-rehype'))
     // .use(require('rehype-react'), { createElement: require('react').createElement })
-    // Create comment nodes
-    .use(require('@mdx-js/mdx/md-ast-to-mdx-ast'))
     // Transform AST to JSX elements. Includes special code block parsing
     .use(require('./mdx-ast-to-mdx-hast'))
     // Don't allow exports
     .use(() => tree => remove(tree, 'export'))
+    // Comments aren't very useful in generated files no one wants to look at
+    .use(() => tree => remove(tree, 'comment'))
+    // Add custom PatternFly doc design things
+    .use(require('./anchor-header'))
+    .use(require('./styled-tags'))
     // Transform HAST object to JSX string, 
     .use(require('./mdx-hast-to-jsx'), {
       getRelPath: () => path.relative(path.dirname(outPath), vfile.dirname), // for imports
       getPageData: () => pageData // For @reach/router routing
     })
-    // .use(require('@mdx-js/mdx/mdx-hast-to-jsx'))
     .process(vfile, (err, file) => {
       if (err) {
         console.error(vfileReport(err || file));
@@ -116,7 +122,7 @@ function toReactComponent(mdFilePath, source) {
 }
 
 const index = [];
-const routes = [];
+const cjsRoutes = {};
 
 module.exports = {
   sourceMD(files, source) {
@@ -126,11 +132,19 @@ module.exports = {
       if (jsx) {
         fs.outputFileSync(outPath, jsx);
         index.push(path.relative(outputBase, outPath));
+        cjsRoutes[pageData.slug] = {
+          id: pageData.id,
+          title: pageData.title,
+          section: pageData.section,
+          source: pageData.source
+        };
       }
     });
   },
   writeIndex() {
     const indexContent = index.map(file => `export * from './${file}';`).join('\n');
     fs.outputFileSync(path.join(outputBase, 'index.js'), indexContent);
+    const indexCJSContent = `module.exports = ${JSON.stringify(cjsRoutes, null, 2)};`;
+    fs.outputFileSync(path.join(outputBase, 'index.cjs.js'), indexCJSContent);
   }
 };

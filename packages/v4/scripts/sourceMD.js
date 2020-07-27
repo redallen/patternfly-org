@@ -1,6 +1,6 @@
 const path = require('path');
 const glob = require('glob');
-const { sourceMD } = require('theme-patternfly-org/scripts/md/parseMD');
+const { sourceMD, writeIndex } = require('theme-patternfly-org/scripts/md/parseMD');
 
 // Source org md
 sourceMD(
@@ -19,7 +19,7 @@ sourceMD(
 );
 
 sourceMD(
-  glob.sync(path.join(__dirname, '../src/content/design-guidelines/usage-and-behavior/**/*.md')),
+  glob.sync(path.join(__dirname, '../src/content/design-guidelines/**/*.md')),
   'usage-and-behavior'
 );
 
@@ -52,3 +52,4 @@ sourceMD(
   'react'
 );
 
+writeIndex();
