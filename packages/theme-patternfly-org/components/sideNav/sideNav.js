@@ -5,37 +5,31 @@ import { css } from '@patternfly/react-styles';
 import { slugger } from '../../helpers';
 import './sideNav.css';
 
-const renderNavItem = ({ text, href }) => {
-  return (
-    <li key={href} className="pf-c-nav__item">
-      <Link
-        to={href}
-        getProps={({ isCurrent }) => ({
-          className: css(
-            'pf-c-nav__link',
-            isCurrent && 'pf-m-current'
-          )
-        })}
-      >
-        {text}
-      </Link>
-    </li>
-  );
-}
+const NavItem = ({ text, href }) => (
+  <li key={href + text} className="pf-c-nav__item">
+    <Link
+      to={href}
+      getProps={({ isCurrent }) => ({
+        className: css(
+          'pf-c-nav__link',
+          isCurrent && 'pf-m-current'
+        )
+      })}
+    >
+      {text}
+    </Link>
+  </li>
+);
 
-export const SideNav = ({
-  location,
-  sideNavItems, // From patternfly-docs.config.js
-  idPages
-}) => (
+export const SideNav = ({ location, groupedRoutes = {}, navItems = [] }) => (
   <Nav aria-label="Side Nav" theme="light">
     <NavList className="ws-side-nav-list">
-      {sideNavItems.map(({ section, text, href }) => {
+      {navItems.map(({ section, text, href }) => {
         if (!section) {
           // Single nav item
-          return renderNavItem({
+          return NavItem({
             text: text || capitalize(href.replace(/\//g, '').replace(/-/g, ' ')),
-            href
+            href: href
           });
         }
         else {
@@ -48,9 +42,10 @@ export const SideNav = ({
               isExpanded={isActive}
               className="ws-side-nav-group"
             >
-              {idPages && idPages[section] && Object.entries(idPages[section])
-                .map(([title, { slug }]) => ({ text: title, href: slug }))
-                .map(renderNavItem)}
+              {Object.entries(groupedRoutes[section] || {})
+                .map(([id, { slug }]) => ({ text: id, href: slug }))
+                .map(NavItem)
+              }
             </NavExpandable>
           );
         }

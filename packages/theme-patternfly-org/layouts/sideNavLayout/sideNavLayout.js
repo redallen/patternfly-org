@@ -15,6 +15,7 @@ import {
   Divider
 } from '@patternfly/react-core';
 import { SearchIcon, ExternalLinkAltIcon } from '@patternfly/react-icons';
+import ConfigContext from '../../helpers/configContext';
 import { SideNav, TopNav, Footer, GdprBanner } from '../../components';
 import staticVersions from '../../versions.json';
 import logo from '../logo.svg';
@@ -122,20 +123,22 @@ const HeaderTools = ({
 }
 
 export const SideNavLayout = ({
-  children,
   location,
-  hideSideNav = false,
-  hasGdprBanner = false,
-  hasFooter = false,
-  hasSearch = false,
-  hasVersionSwitcher = false,
-  sideNavItems,
-  idPages,
-  topNavItems = [],
-  prnum = null,
-  prurl,
-  pathPrefix
+  children
 }) => {
+  const {
+    hideSideNav = false,
+    hasGdprBanner = false,
+    hasFooter = false,
+    hasSearch = false,
+    hasVersionSwitcher = false,
+    sideNavItems,
+    topNavItems,
+    prnum = null,
+    prurl,
+    pathPrefix,
+    groupedRoutes
+  } = React.useContext(ConfigContext)
   const [versions, setVersions] = useState({ ...staticVersions });
   if (typeof window !== 'undefined' && window.ga) {
     window.ga('set', 'page', location.pathname);
@@ -166,7 +169,7 @@ export const SideNavLayout = ({
     <PageSidebar
       className="ws-page-sidebar"
       theme="light"
-      nav={<SideNav location={location} sideNavItems={sideNavItems} idPages={idPages} />}
+      nav={<SideNav location={location} navItems={sideNavItems} groupedRoutes={groupedRoutes} />}
     />
   );
 

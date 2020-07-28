@@ -8,7 +8,6 @@ module.exports = {
   sideNavItems: [
     { section: 'get-started' },
     { section: 'styles' },
-    { section: 'content' },
     { section: 'components' },
     { section: 'demos' },
     { section: 'layouts' },
