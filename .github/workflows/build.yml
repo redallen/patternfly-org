@@ -1,0 +1,95 @@
+name: build
+on: [push]
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - uses: actions/cache@v2
+        id: yarn-cache-check
+        with:
+          path: 'yarn.lock'
+          key: ${{ runner.os }}-yarn-check-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+        if: steps.yarn-cache-check.outputs.cache-hit != 'true'
+      - run: yarn install --frozen-lockfile
+        if: steps.yarn-cache-check.outputs.cache-hit != 'true'
+  build-v3:
+    runs-on: ubuntu-latest
+    needs: install
+    env:
+      SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+      SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.6'
+      - uses: actions/cache@v2
+        id: yarn-v3-cache
+        with:
+          path: |
+            node_modules
+            packages/v3/node_modules
+          key: ${{ runner.os }}-yarn-v3-${{ hashFiles('packages/v3/yarn.lock') }}
+      - run: bundle install --jobs 4 --retry 3
+      - run: git clean -ndfx
+      - run: cd packages/v3 && yarn build
+      - run: yarn copy:v3
+      - run: node .github/upload-preview.js build/patternfly-org v3
+      - uses: actions/upload-artifact@v2
+        id: upload-build-v3
+        with:
+          name: build-v3
+          path: build/patternfly-org/v3/
+  build-v4:
+    runs-on: ubuntu-latest
+    needs: install
+    env:
+      SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+      SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+      - run: yarn build:v4
+      - run: node .github/upload-preview.js build/patternfly-org v4
+        # - uses: actions/upload-artifact@v2
+        #   id: upload-build-v4
+        #   with:
+        #     name: build-v4
+        #     path: build/patternfly-org/v4/
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build-v3
+      - build-v4
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+      # Downloads all artifacts
+      # - uses: actions/download-artifact@v2
+      - run: ls build/patternfly-org
